@@ -45,6 +45,7 @@ export type EventTemplate = {
 export type RoleTemplate = {
     id: string;
     name: string;
+    description?: string;
     collectionId: string;
     collectionName: string;
     created: string;

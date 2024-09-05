@@ -10,13 +10,7 @@
         <span class="font-bold">{title}: </span>
     {/if}
     {#if edit}
-        <input
-            class="input inline"
-            type="text"
-            id={title.toLowerCase()}
-            name={title.toLowerCase()}
-            {value}
-        />
+        <textarea class="textarea" id={title.toLowerCase()} name={title.toLowerCase()} {value} />
     {:else}
         {value}
     {/if}

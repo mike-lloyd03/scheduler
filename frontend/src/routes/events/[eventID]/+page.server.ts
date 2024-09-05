@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 };
 
 export const actions: Actions = {
-    edit: async ({ request, locals, params }) => {
+    updateEvent: async ({ request, locals, params }) => {
         const data = await request.formData();
 
         try {
@@ -32,7 +32,11 @@ export const actions: Actions = {
     newRole: async ({ request, locals, params }) => {
         const data = await request.formData();
 
-        const body = { name: data.get("name"), event_template: params.eventID };
+        const body = {
+            name: data.get("name"),
+            description: data.get("description"),
+            event_template: params.eventID,
+        };
 
         try {
             await locals.pb.collection("role_templates").create(body);
@@ -44,10 +48,25 @@ export const actions: Actions = {
         }
     },
 
+    updateRole: async ({ request, locals }) => {
+        const data = await request.formData();
+
+        const id: string = data.get("roleID")?.toString() || "";
+
+        try {
+            await locals.pb.collection("role_templates").update(id, data);
+        } catch (e) {
+            const error = e as ClientResponseError;
+            console.log("Error: ", JSON.stringify(error.data));
+
+            return fail(error.status, { message: error.message });
+        }
+    },
+
     deleteRole: async ({ request, locals }) => {
         const data = await request.formData();
 
-        const id: string = data.get("deleteRoleID")?.toString() || "";
+        const id: string = data.get("roleID")?.toString() || "";
 
         try {
             await locals.pb.collection("role_templates").delete(id);

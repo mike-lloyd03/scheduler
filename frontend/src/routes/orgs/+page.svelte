@@ -7,7 +7,7 @@
 
 <h2 class="h2">Organizations</h2>
 <div class="table-container">
-    <table class="table table-hover">
+    <table class="table table-hover table-fixed text-center">
         <thead>
             <th>Group</th>
             <th>Created At</th>

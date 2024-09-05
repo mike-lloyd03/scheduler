@@ -7,7 +7,7 @@
 
 <h2 class="h2">Groups</h2>
 <div class="table-container">
-    <table class="table table-hover">
+    <table class="table table-hover table-fixed text-center">
         <thead>
             <th>Group</th>
             <th>Organization</th>
@@ -16,7 +16,7 @@
             {#each data.groups as group}
                 <tr class="cursor-pointer" on:click={() => goto(`/groups/${group.id}`)}>
                     <td>{group.name}</td>
-                    <td>{group.expand.org.name}</td>
+                    <td>{group.expand?.org.name}</td>
                 </tr>
             {/each}
         </tbody>

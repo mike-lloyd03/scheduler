@@ -13,11 +13,9 @@
     var editRoleTemplate: string | null = null;
     var deleteRoleTemplate: string | null = null;
     var newRole = false;
-    var loading = false;
 
     const submit: SubmitFunction = ({ action, formData }) => {
         var successMsg = "Successful";
-        loading = true;
 
         switch (action.search) {
             case "?/updateEvent":
@@ -51,7 +49,6 @@
                 default:
                     await update();
             }
-            loading = false;
         };
     };
 </script>
@@ -109,7 +106,7 @@
         <h3 class="h3">Event Roles</h3>
         <div class="table-container">
             <form method="POST" use:enhance={submit}>
-                <table class="table table-hover text-center">
+                <table class="table table-hover table-fixed text-center">
                     <thead>
                         <th>Role</th>
                         <th>Description</th>
@@ -173,9 +170,8 @@
                                     />
                                 </td>
                                 <td>
-                                    <input
-                                        class="input"
-                                        type="text"
+                                    <textarea
+                                        class="textarea"
                                         name="description"
                                         id="description"
                                         placeholder="Description"

@@ -7,7 +7,7 @@
 
 <h2 class="h2">Events</h2>
 <div class="table-container">
-    <table class="table table-hover">
+    <table class="table table-hover table-fixed text-center">
         <thead>
             <th>Name</th>
             <th>Recurrence</th>

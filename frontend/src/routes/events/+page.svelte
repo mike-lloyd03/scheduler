@@ -14,11 +14,11 @@
             <th>Group</th>
         </thead>
         <tbody>
-            {#each data.event_templates as event_template}
-                <tr class="cursor-pointer" on:click={() => goto(`/events/${event_template.id}`)}>
-                    <td>{event_template.name}</td>
-                    <td>{event_template.recurrence}</td>
-                    <td>{event_template.expand?.group.name || ""}</td>
+            {#each data.eventTemplates as eventTemplate}
+                <tr class="cursor-pointer" on:click={() => goto(`/events/${eventTemplate.id}`)}>
+                    <td>{eventTemplate.name}</td>
+                    <td>{eventTemplate.recurrence}</td>
+                    <td>{eventTemplate.expand?.group.name || ""}</td>
                 </tr>
             {/each}
         </tbody>

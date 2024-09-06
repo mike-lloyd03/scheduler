@@ -6,6 +6,11 @@
     import SelectField from "$lib/SelectField.svelte";
     import type { PageData } from "./$types";
     import TextAreaField from "$lib/TextAreaField.svelte";
+    import Edit from "$lib/svg/Edit.svelte";
+    import Delete from "$lib/svg/Delete.svelte";
+    import Add from "$lib/svg/Add.svelte";
+    import Check from "$lib/svg/Check.svelte";
+    import Cancel from "$lib/svg/Cancel.svelte";
 
     export let data: PageData;
 
@@ -57,47 +62,43 @@
     <form method="POST" use:enhance={submit} action="?/updateEvent">
         <div class="py-4">
             <div>
-                <InputField
-                    title="Name"
-                    value={data.event_template.name}
-                    edit={editEventTemplate}
-                />
+                <InputField title="Name" value={data.eventTemplate.name} edit={editEventTemplate} />
             </div>
             <div>
                 <SelectField
                     title="Recurrence"
-                    value={data.event_template.recurrence}
+                    value={data.eventTemplate.recurrence}
                     options={["daily", "weekly", "monthly"]}
                     edit={editEventTemplate}
                 />
             </div>
             <div>
                 <span class="font-bold">Group:</span>
-                {data.event_template.expand?.group.name || ""}
+                {data.eventTemplate.expand?.group.name || ""}
             </div>
             <div>
                 <span class="font-bold">Created at:</span>
-                {data.event_template.created}
+                {data.eventTemplate.created}
             </div>
             <div>
                 <span class="font-bold">Updated at:</span>
-                {data.event_template.updated}
+                {data.eventTemplate.updated}
             </div>
         </div>
         {#if editEventTemplate}
-            <button type="submit" class="variant-filled-primary btn">Save</button>
+            <button type="submit" class="variant-filled-success btn"><Check /></button>
             <button
                 type="button"
                 class="variant-filled-secondary btn"
                 on:click|preventDefault={() => (editEventTemplate = false)}
             >
-                Cancel
+                <Cancel />
             </button>
         {:else}
             <button
                 type="submit"
                 class="variant-filled-primary btn"
-                on:click|preventDefault={() => (editEventTemplate = true)}>Edit</button
+                on:click|preventDefault={() => (editEventTemplate = true)}><Edit /></button
             >
         {/if}
     </form>
@@ -113,45 +114,46 @@
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        {#each data.role_templates as role_template}
+                        {#each data.roleTemplates as roleTemplate}
                             <tr>
                                 <td>
                                     <InputField
                                         title="name"
-                                        value={role_template.name}
-                                        edit={role_template.id == editRoleTemplate}
+                                        value={roleTemplate.name}
+                                        edit={roleTemplate.id == editRoleTemplate}
                                         hideTitle
                                     />
                                 </td>
                                 <td>
                                     <TextAreaField
                                         title="description"
-                                        value={role_template.description}
-                                        edit={role_template.id == editRoleTemplate}
+                                        value={roleTemplate.description || ""}
+                                        edit={roleTemplate.id == editRoleTemplate}
                                         hideTitle
                                     />
                                 </td>
                                 <td>
-                                    {#if role_template.id == editRoleTemplate}
+                                    {#if roleTemplate.id == editRoleTemplate}
                                         <button
-                                            class="variant-filled-primary btn"
-                                            formaction="?/updateRole">Save</button
+                                            class="variant-filled-success btn"
+                                            formaction="?/updateRole"><Check /></button
                                         >
                                         <button
                                             class="variant-filled-secondary btn"
                                             on:click|preventDefault={() =>
-                                                (editRoleTemplate = null)}>Cancel</button
+                                                (editRoleTemplate = null)}><Cancel /></button
                                         >
                                     {:else}
                                         <button
                                             class="variant-filled-primary btn"
                                             on:click|preventDefault={() =>
-                                                (editRoleTemplate = role_template.id)}>Edit</button
+                                                (editRoleTemplate = roleTemplate.id)}
+                                            ><Edit /></button
                                         >
                                         <button
-                                            class="variant-filled-secondary btn"
-                                            on:click={() => (deleteRoleTemplate = role_template.id)}
-                                            formaction="?/deleteRole">Delete</button
+                                            class="variant-filled-error btn"
+                                            on:click={() => (deleteRoleTemplate = roleTemplate.id)}
+                                            formaction="?/deleteRole"><Delete /></button
                                         >
                                     {/if}
                                 </td>
@@ -179,14 +181,14 @@
                                 </td>
                                 <td>
                                     <button
-                                        class="variant-filled-primary btn"
-                                        formaction="?/newRole">Save</button
+                                        class="variant-filled-success btn"
+                                        formaction="?/newRole"><Check /></button
                                     >
                                     <button
                                         class="variant-filled-secondary btn"
                                         on:click|preventDefault={() => {
                                             newRole = false;
-                                        }}>Cancel</button
+                                        }}><Cancel /></button
                                     >
                                 </td>
                             {:else}
@@ -195,7 +197,8 @@
                                 <td>
                                     <button
                                         class="variant-filled-primary btn"
-                                        on:click|preventDefault={() => (newRole = true)}>+</button
+                                        on:click|preventDefault={() => (newRole = true)}
+                                        ><Add /></button
                                     >
                                 </td>
                             {/if}

@@ -53,3 +53,20 @@ export type RoleTemplate = {
     event_template: string;
     expand?: { event_template: EventTemplate };
 };
+
+export type User = {
+    id: string;
+    username: string;
+    verified: false;
+    emailVisibility: true;
+    email: string;
+    name: string;
+    role: string;
+    orgs: string[];
+    groups: string[];
+    collectionId: string;
+    collectionName: string;
+    created: string;
+    updated: string;
+    expand?: { orgs: Org[]; groups: Group[] };
+};

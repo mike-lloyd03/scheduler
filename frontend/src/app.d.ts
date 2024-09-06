@@ -1,4 +1,4 @@
-import type { Org, Group, EventTemplate, RoleTemplate } from "$lib/types";
+import type { Org, Group, EventTemplate, RoleTemplate, User } from "$lib/types";
 import type { AuthModel } from "pocketbase";
 import type PocketBase from "pocketbase";
 
@@ -9,17 +9,20 @@ declare global {
         // interface Error {}
         interface Locals {
             pb: PocketBase;
-            user: AuthModel | undefined;
+            currentUser: AuthModel | undefined;
         }
         interface PageData {
+            currentUser: AuthModel | undefined;
             orgs?: Org[];
-            org?: Group;
+            org?: Org;
             groups?: Group[];
             group?: Group;
-            event_templates?: EventTemplate[];
-            event_template?: EventTemplate;
-            role_templates?: RoleTemplate[];
-            role_template?: RoleTemplate;
+            eventTemplates?: EventTemplate[];
+            eventTemplate?: EventTemplate;
+            roleTemplates?: RoleTemplate[];
+            roleTemplate?: RoleTemplate;
+            users?: User[];
+            user?: User;
         }
         // interface PageState {}
         // interface Platform {}

@@ -1,18 +1,19 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import type { SubmitFunction } from "@sveltejs/kit";
     import toast from "svelte-french-toast";
 
-    var loading = false;
+    let loading = false;
 
-    const submitLogin = () => {
+    const submitLogin: SubmitFunction = () => {
         loading = true;
         return async ({ result, update }) => {
             switch (result.type) {
                 case "success":
                     await update();
                     break;
-                case "invalid":
-                    toast.error("Invalid credentials");
+                case "failure":
+                    toast.error(result.data?.message || "Something went wrong");
                     await update();
                     break;
                 case "error":

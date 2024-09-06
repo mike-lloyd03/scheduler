@@ -9,13 +9,13 @@
 
     export let data: PageData;
 
-    var editEventTemplate = false;
-    var editRoleTemplate: string | null = null;
-    var deleteRoleTemplate: string | null = null;
-    var newRole = false;
+    let editEventTemplate = false;
+    let editRoleTemplate: string | null = null;
+    let deleteRoleTemplate: string | null = null;
+    let newRole = false;
 
     const submit: SubmitFunction = ({ action, formData }) => {
-        var successMsg = "Successful";
+        let successMsg = "Successful";
 
         switch (action.search) {
             case "?/updateEvent":

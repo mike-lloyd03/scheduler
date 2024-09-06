@@ -7,12 +7,9 @@
 
     export let data: PageData;
 
-    var edit = false;
-    var loading = false;
+    let edit = false;
 
     const submit: SubmitFunction = ({ cancel }) => {
-        loading = true;
-
         if (edit == false) {
             edit = true;
             cancel();
@@ -32,7 +29,6 @@
                 default:
                     await update();
             }
-            loading = false;
         };
     };
 </script>

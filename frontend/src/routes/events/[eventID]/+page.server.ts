@@ -4,15 +4,15 @@ import type { RoleTemplate, EventTemplate } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-    const event_template = await locals.pb
+    const eventTemplate = await locals.pb
         .collection("event_templates")
         .getOne<EventTemplate>(params.eventID, { expand: "group" });
 
-    const role_templates = await locals.pb.collection("role_templates").getFullList<RoleTemplate>({
+    const roleTemplates = await locals.pb.collection("role_templates").getFullList<RoleTemplate>({
         filter: `(event_template='${params.eventID}')`,
     });
 
-    return { event_template, role_templates };
+    return { eventTemplate, roleTemplates };
 };
 
 export const actions: Actions = {

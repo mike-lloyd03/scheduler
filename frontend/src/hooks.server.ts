@@ -8,11 +8,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     try {
         if (event.locals.pb.authStore.isValid) {
             await event.locals.pb.collection("users").authRefresh();
-            event.locals.user = structuredClone(event.locals.pb.authStore.model);
+            event.locals.currentUser = structuredClone(event.locals.pb.authStore.model);
         }
     } catch (_) {
         event.locals.pb.authStore.clear();
-        event.locals.user = undefined;
+        event.locals.currentUser = undefined;
     }
 
     const response = await resolve(event);

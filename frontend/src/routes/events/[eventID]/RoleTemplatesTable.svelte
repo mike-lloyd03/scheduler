@@ -11,7 +11,6 @@
     export let roleTemplates: RoleTemplate[];
 
     let editRoleTemplate: string | null;
-    let deleteRoleTemplate: string | null;
     let newRole: boolean;
 
     const submit: SubmitFunction = ({ action, formData }) => {

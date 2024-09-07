@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { invalidateAll } from "$app/navigation";
     import InputField from "$lib/InputField.svelte";
     import Cancel from "$lib/svg/Cancel.svelte";
     import Check from "$lib/svg/Check.svelte";
@@ -8,11 +7,13 @@
     import TextAreaField from "$lib/TextAreaField.svelte";
     import type { RoleTemplate } from "$lib/types";
     import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton";
+    import { runAction } from "$lib/utils";
 
     const modalStore = getModalStore();
 
     export let roleTemplate: RoleTemplate;
     export let editRoleTemplate: string | null;
+
     let deleteRoleTemplate: string | null;
 
     $: edit = roleTemplate.id == editRoleTemplate;
@@ -29,15 +30,8 @@
             };
             modalStore.trigger(modal);
         }).then((r) => {
-            console.log("ID: ", roleTemplate.id);
             if (r) {
-                fetch("?/deleteRole", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: `roleID=${roleTemplate.id}`,
-                }).then(() => invalidateAll());
+                runAction("?/deleteRole", `roleID=${roleTemplate.id}`);
             }
         });
     }

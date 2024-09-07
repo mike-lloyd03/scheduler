@@ -1,3 +1,4 @@
+import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
 
 export function handleSubmit(successMsg: string) {
@@ -14,4 +15,14 @@ export function handleSubmit(successMsg: string) {
                 await update();
         }
     };
+}
+
+export function runAction(action: string, body?: string) {
+    fetch(action, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+    }).then(() => invalidateAll());
 }

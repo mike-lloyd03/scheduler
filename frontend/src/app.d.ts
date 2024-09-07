@@ -1,4 +1,4 @@
-import type { Org, Group, EventTemplate, RoleTemplate, User } from "$lib/types";
+import type { Org, Group, EventTemplate, RoleTemplate, User, Event, Role } from "$lib/types";
 import type { AuthModel } from "pocketbase";
 import type PocketBase from "pocketbase";
 
@@ -17,6 +17,10 @@ declare global {
             org?: Org;
             groups?: Group[];
             group?: Group;
+            events?: Event[];
+            event?: Event;
+            roles?: Role[];
+            role?: Role;
             eventTemplates?: EventTemplate[];
             eventTemplate?: EventTemplate;
             roleTemplates?: RoleTemplate[];

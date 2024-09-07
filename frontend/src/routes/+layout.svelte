@@ -31,7 +31,7 @@
             <h2 class="p-4">Navigation</h2>
         </div>
         <hr />
-        <Navigation />
+        <Navigation {drawerClose} />
     </Drawer>
 {/if}
 

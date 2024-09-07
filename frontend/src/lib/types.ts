@@ -42,6 +42,17 @@ export type EventTemplate = {
     expand?: { group: Group };
 };
 
+export type Event = {
+    id: string;
+    event_template: string;
+    datetime: string;
+    collectionId: string;
+    collectionName: string;
+    created: string;
+    updated: string;
+    expand?: { role_template: RoleTemplate };
+};
+
 export type RoleTemplate = {
     id: string;
     name: string;
@@ -52,6 +63,18 @@ export type RoleTemplate = {
     updated: string;
     event_template: string;
     expand?: { event_template: EventTemplate };
+};
+
+export type Role = {
+    id: string;
+    role_template: string;
+    event: string;
+    assigned_to?: string;
+    collectionId: string;
+    collectionName: string;
+    created: string;
+    updated: string;
+    expand?: { role_template: RoleTemplate; event: Event };
 };
 
 export type User = {

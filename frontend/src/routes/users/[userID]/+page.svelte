@@ -2,7 +2,7 @@
     import { enhance } from "$app/forms";
     import toast from "svelte-french-toast";
     import type { SubmitFunction } from "@sveltejs/kit";
-    import InputField from "$lib/InputField.svelte";
+    import InputField from "$lib/fields/InputField.svelte";
     import type { PageData } from "./$types";
 
     export let data: PageData;

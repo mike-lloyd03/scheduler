@@ -1,6 +1,6 @@
 <script lang="ts">
     export let title: string;
-    export let value: string;
+    export let value: string | undefined;
     export let edit: boolean;
     export let hideTitle = false;
 </script>

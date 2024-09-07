@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Toaster } from "svelte-french-toast";
     import { AppShell, AppBar } from "@skeletonlabs/skeleton";
-    import { initializeStores, Drawer, getDrawerStore } from "@skeletonlabs/skeleton";
+    import { initializeStores, Drawer, Modal, getDrawerStore } from "@skeletonlabs/skeleton";
     import "../app.css";
     import Navigation from "./Navigation.svelte";
     import type { PageData } from "./$types";
@@ -61,6 +61,7 @@
     <div class="container h-max space-y-4 p-10">
         <slot />
     </div>
-
-    <Toaster />
 </AppShell>
+
+<Toaster />
+<Modal />

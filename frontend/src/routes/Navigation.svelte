@@ -8,6 +8,7 @@
         <li><a on:click={drawerClose} href="/orgs">Orgs</a></li>
         <li><a on:click={drawerClose} href="/groups">Groups</a></li>
         <li><a on:click={drawerClose} href="/event-templates">Event Templates</a></li>
+        <li><a on:click={drawerClose} href="/events">Events</a></li>
         <li><a on:click={drawerClose} href="/users">Users</a></li>
     </ul>
     <hr />

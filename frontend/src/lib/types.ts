@@ -50,7 +50,7 @@ export type Event = {
     collectionName: string;
     created: string;
     updated: string;
-    expand?: { role_template: RoleTemplate };
+    expand?: { event_template: EventTemplate };
 };
 
 export type RoleTemplate = {
@@ -74,7 +74,7 @@ export type Role = {
     collectionName: string;
     created: string;
     updated: string;
-    expand?: { role_template: RoleTemplate; event: Event };
+    expand?: { role_template: RoleTemplate; event: Event; assigned_to: User };
 };
 
 export type User = {

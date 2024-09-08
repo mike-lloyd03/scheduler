@@ -26,3 +26,13 @@ export function runAction(action: string, body?: string) {
         body: body,
     }).then(() => invalidateAll());
 }
+
+export function jsonToFormString(jsonData: object): string {
+    const formData: string[] = [];
+
+    Object.entries(jsonData).forEach(([k, v]) => formData.push(`${k}=${v}`));
+
+    console.log("jsonToForm result: ");
+
+    return formData.join("&");
+}

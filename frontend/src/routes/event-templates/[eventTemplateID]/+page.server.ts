@@ -74,8 +74,6 @@ export const actions: Actions = {
     },
 
     deleteRole: async ({ request, locals }) => {
-        // TODO: Delete
-        console.log("deleting role");
         const data = await request.formData();
 
         const id: string = data.get("roleID")?.toString() || "";

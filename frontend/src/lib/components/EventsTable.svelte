@@ -2,7 +2,7 @@
     import { enhance } from "$app/forms";
     import type { SubmitFunction } from "@sveltejs/kit";
     import type { Event, Role } from "$lib/types";
-    import { handleSubmit, runAction } from "$lib/utils";
+    import { handleSubmit } from "$lib/utils";
     import { goto } from "$app/navigation";
     import Delete from "$lib/svg/Delete.svelte";
     import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton";
@@ -14,21 +14,30 @@
     export let hideEventName = false;
     export let enableNav = false;
 
+    let formElement: HTMLFormElement;
+
     let editRoleTemplate: string | null;
+    let deleteEvent: string | null;
     let newRole: boolean;
 
     const submit: SubmitFunction = ({ action, formData }) => {
         let successMsg = "Successful";
 
         switch (action.search) {
-            case "?/newEvent":
+            case "/events?/newEvent":
                 newRole = false;
-                successMsg = "New Role created";
+                successMsg = "New event created";
                 break;
-            case "?/updateEvent":
-                successMsg = "Role updated";
+            case "/events?/updateEvent":
+                successMsg = "Event updated";
                 formData.set("roleID", editRoleTemplate || "");
                 editRoleTemplate = null;
+                break;
+            case "/events?/deleteEvent":
+                console.log("Sending deleteEvent action");
+                successMsg = "Event deleted";
+                formData.set("eventID", deleteEvent || "");
+                deleteEvent = null;
                 break;
         }
 
@@ -36,13 +45,14 @@
     };
 
     function handleDelete(event: Event) {
+        deleteEvent = event.id;
         const modal: ModalSettings = {
             type: "confirm",
             title: "Delete Event",
-            body: `Are you sure you want to delete event '${event.expand?.event_template.name}'`,
+            body: `Are you sure you want to delete this scheduled '${event.expand?.event_template.name}' event?'`,
             response: (r: boolean) => {
                 if (r) {
-                    runAction("/events?/deleteEvent", `eventID=${event.id}`);
+                    formElement.requestSubmit();
                 }
             },
         };
@@ -87,11 +97,19 @@
                                 .length}</td
                         >
                         <th>
-                            <button
-                                class="btn hover:variant-ringed-error"
-                                on:click|preventDefault|stopPropagation={() =>
-                                    handleDelete(er.event)}><Delete /></button
+                            <form
+                                bind:this={formElement}
+                                method="POST"
+                                action="/events?/deleteEvent"
+                                use:enhance={submit}
                             >
+                                <input type="hidden" name="eventID" value={er.event.id} />
+                                <button
+                                    class="btn hover:variant-ringed-error"
+                                    on:click|preventDefault|stopPropagation={() =>
+                                        handleDelete(er.event)}><Delete /></button
+                                >
+                            </form>
                         </th>
                     </tr>
                 {/each}

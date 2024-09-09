@@ -14,6 +14,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
     const events = await locals.pb.collection("events").getFullList<Event>({
         filter: `(event_template='${params.eventTemplateID}')`,
+        expand: "event_template",
     });
 
     const roles = await locals.pb.collection("roles").getFullList<Role>({

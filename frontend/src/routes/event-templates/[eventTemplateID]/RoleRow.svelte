@@ -22,7 +22,7 @@
         const modal: ModalSettings = {
             type: "confirm",
             title: "Delete Role Template",
-            body: `Are you sure you want to delete role template 'bob'`,
+            body: `Are you sure you want to delete role template '${roleTemplate.name}'?`,
             response: (r: boolean) => {
                 if (r) {
                     formElement.requestSubmit();

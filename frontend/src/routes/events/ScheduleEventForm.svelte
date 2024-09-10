@@ -39,6 +39,7 @@
     }
 
     let createRoles: Record<string, boolean> = {};
+    // TODO: Should probably just generate the create role request bodies here and stringify them
     function updateCreateRolesValue() {
         const selectedRoles = Object.entries(createRoles)
             .filter(([_, v]) => v)

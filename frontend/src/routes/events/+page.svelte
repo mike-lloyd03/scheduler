@@ -15,6 +15,7 @@
     let createEventFormData = {
         event_template: "",
         datetime: "",
+        roles: "",
     };
 
     function modalComponentForm(): void {
@@ -22,7 +23,7 @@
         const modal: ModalSettings = {
             type: "component",
             component: c,
-            meta: { eventTemplates: data.eventTemplates },
+            meta: { eventTemplates: data.eventTemplates, roleTemplates: data.roleTemplates },
             response: (r) => {
                 if (r) {
                     createEventFormData = r;
@@ -40,6 +41,7 @@
             case "?/createEvent":
                 formData.set("event_template", createEventFormData.event_template);
                 formData.set("datetime", createEventFormData.datetime);
+                formData.set("roles", createEventFormData.roles);
                 successMsg = "Event scheduled";
                 break;
         }

@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { SvelteComponent } from "svelte";
     import { getModalStore } from "@skeletonlabs/skeleton";
+    import type { EventTemplate, RoleTemplate } from "$lib/types";
 
     export let parent: SvelteComponent;
 
@@ -9,6 +10,7 @@
     const formData = {
         event_template: "",
         datetime: "",
+        roles: "",
     };
 
     function onFormSubmit(): void {
@@ -16,6 +18,32 @@
             $modalStore[0].response(formData);
         }
         modalStore.close();
+    }
+
+    const eventTemplatesAndRoleTemplates: {
+        eventTemplate: EventTemplate;
+        roleTemplates: RoleTemplate[];
+    }[] = $modalStore[0].meta.eventTemplates.map((et: EventTemplate) => {
+        let roleTemplates = $modalStore[0].meta.roleTemplates.filter(
+            (rt: RoleTemplate) => (rt.event_template = et.id),
+        );
+        return { eventTemplate: et, roleTemplates };
+    });
+
+    let selectedEventRoleTemplates: RoleTemplate[] | undefined;
+
+    $: if ($modalStore[0]) {
+        selectedEventRoleTemplates = eventTemplatesAndRoleTemplates.find(
+            (etrt) => etrt.eventTemplate.id == formData.event_template,
+        )?.roleTemplates;
+    }
+
+    let createRoles: Record<string, boolean> = {};
+    function updateCreateRolesValue() {
+        const selectedRoles = Object.entries(createRoles)
+            .filter(([_, v]) => v)
+            .map(([k]) => k);
+        formData.roles = JSON.stringify(selectedRoles);
     }
 
     const cBase = "card p-4 w-modal shadow-xl space-y-4";
@@ -31,21 +59,33 @@
             <label class="label">
                 <span>Event Template</span>
                 <select class="select" bind:value={formData.event_template}>
-                    {#each $modalStore[0].meta.eventTemplates as eventTemplate}
-                        <option value={eventTemplate.id}>{eventTemplate.name}</option>
+                    {#each $modalStore[0].meta.eventTemplates as et}
+                        <option value={et.id}>{et.name}</option>
                     {/each}
                 </select>
             </label>
 
             <label class="label">
                 <span>Date</span>
-                <input
-                    class="input"
-                    type="date"
-                    bind:value={formData.datetime}
-                    placeholder="Enter email address..."
-                />
+                <input class="input" type="date" bind:value={formData.datetime} />
             </label>
+
+            {#if selectedEventRoleTemplates}
+                <label class="label">
+                    <span>Add Roles</span>
+                    {#each selectedEventRoleTemplates as rt}
+                        <label class="flex items-center space-x-2">
+                            <input
+                                class="checkbox"
+                                type="checkbox"
+                                bind:checked={createRoles[rt.id]}
+                                on:change={updateCreateRolesValue}
+                            />
+                            <p>{rt.name}</p>
+                        </label>
+                    {/each}
+                </label>
+            {/if}
         </form>
 
         <footer class="modal-footer {parent.regionFooter}">

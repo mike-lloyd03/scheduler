@@ -6,6 +6,9 @@
     import Navigation from "./Navigation.svelte";
     import type { PageData } from "./$types";
     import Hamburger from "$lib/svg/Hamburger.svelte";
+    import { page } from "$app/stores";
+    import { goto } from "$app/navigation";
+    import { onMount } from "svelte";
 
     export let data: PageData;
 
@@ -20,6 +23,13 @@
     function drawerClose(): void {
         drawerStore.close();
     }
+
+    onMount(() => {
+        console.log("pathname: ", $page.url.pathname);
+        if (!data.currentUser && $page.url.pathname != "/login") {
+            goto("/login");
+        }
+    });
 </script>
 
 {#if data.currentUser}

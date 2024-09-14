@@ -91,5 +91,5 @@ export type User = {
     collectionName: string;
     created: string;
     updated: string;
-    expand?: { orgs: Org[]; groups: Group[] };
+    expand?: { orgs?: Org[]; groups?: Group[] };
 };

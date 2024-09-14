@@ -22,8 +22,8 @@
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
-                    <td>{user.orgs}</td>
-                    <td>{user.groups}</td>
+                    <td>{user.expand?.orgs?.map((org) => org.name).join(", ") || "None"}</td>
+                    <td>{user.expand?.groups?.map((group) => group.name).join(", ") || "None"}</td>
                     <td></td>
                 </tr>
             {/each}

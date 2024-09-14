@@ -25,7 +25,6 @@
     }
 
     onMount(() => {
-        console.log("pathname: ", $page.url.pathname);
         if (!data.currentUser && $page.url.pathname != "/login") {
             goto("/login");
         }

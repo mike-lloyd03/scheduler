@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { SvelteComponent } from "svelte";
     import { getModalStore } from "@skeletonlabs/skeleton";
-    import type { EventTemplate, RoleTemplate } from "$lib/types";
+    import type { EventTemplate, RoleTemplate, User } from "$lib/types";
 
     export let parent: SvelteComponent;
 
@@ -31,20 +31,18 @@
     });
 
     let selectedEventRoleTemplates: RoleTemplate[] | undefined;
+    let users: User[];
 
     $: if ($modalStore[0]) {
         selectedEventRoleTemplates = eventTemplatesAndRoleTemplates.find(
             (etrt) => etrt.eventTemplate.id == formData.event_template,
         )?.roleTemplates;
+        users = $modalStore[0].meta.users;
     }
 
-    let createRoles: Record<string, boolean> = {};
-    // TODO: Should probably just generate the create role request bodies here and stringify them
+    let createRoles: Record<string, string | null> = {};
     function updateCreateRolesValue() {
-        const selectedRoles = Object.entries(createRoles)
-            .filter(([_, v]) => v)
-            .map(([k]) => k);
-        formData.roles = JSON.stringify(selectedRoles);
+        formData.roles = JSON.stringify(createRoles);
     }
 
     const cBase = "card p-4 w-modal shadow-xl space-y-4";
@@ -76,13 +74,17 @@
                     <span>Add Roles</span>
                     {#each selectedEventRoleTemplates as rt}
                         <label class="flex items-center space-x-2">
-                            <input
-                                class="checkbox"
-                                type="checkbox"
-                                bind:checked={createRoles[rt.id]}
-                                on:change={updateCreateRolesValue}
-                            />
                             <p>{rt.name}</p>
+                            <select
+                                class="select"
+                                bind:value={createRoles[rt.id]}
+                                on:change={updateCreateRolesValue}
+                            >
+                                <option value={null}>(Unassigned)</option>
+                                {#each users as user}
+                                    <option value={user.id}>{user.name}</option>
+                                {/each}
+                            </select>
                         </label>
                     {/each}
                 </label>

@@ -18,7 +18,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     const roles = await locals.pb.collection("roles").getFullList<Role>({});
 
-    return { eventTemplates, roleTemplates, events, roles };
+    const users = await locals.pb.collection("users").getFullList<Role>({});
+
+    return { eventTemplates, roleTemplates, events, roles, users };
 };
 
 export const actions: Actions = {
@@ -45,15 +47,18 @@ export const actions: Actions = {
         }
 
         const rolesData = data.get("roles");
+        console.log("rolesData:", JSON.stringify(rolesData));
 
         if (rolesData) {
-            const roles: string[] = JSON.parse(rolesData.toString());
+            const roles: Record<string, string | null> = JSON.parse(rolesData.toString());
 
-            for (const role of roles) {
+            for (const role of Object.entries(roles)) {
                 try {
-                    await locals.pb
-                        .collection("roles")
-                        .create({ role_template: role, event: createdEvent.id });
+                    await locals.pb.collection("roles").create({
+                        role_template: role[0],
+                        event: createdEvent.id,
+                        assigned_to: role[1],
+                    });
                 } catch (e) {
                     const error = e as ClientResponseError;
                     console.log("Error: ", JSON.stringify(error.data));

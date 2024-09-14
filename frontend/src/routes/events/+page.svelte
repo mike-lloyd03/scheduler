@@ -23,7 +23,11 @@
         const modal: ModalSettings = {
             type: "component",
             component: c,
-            meta: { eventTemplates: data.eventTemplates, roleTemplates: data.roleTemplates },
+            meta: {
+                eventTemplates: data.eventTemplates,
+                roleTemplates: data.roleTemplates,
+                users: data.users,
+            },
             response: (r) => {
                 if (r) {
                     createEventFormData = r;

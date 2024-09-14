@@ -3,7 +3,7 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import type { Event, Role } from "$lib/types";
     import { handleSubmit } from "$lib/utils";
-    import { goto, invalidateAll } from "$app/navigation";
+    import { goto } from "$app/navigation";
     import Delete from "$lib/svg/Delete.svelte";
     import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton";
 
@@ -89,7 +89,7 @@
                         {/if}
                         <td>{er.event.datetime}</td>
                         <td
-                            >{er.roles.filter((r) => r.assigned_to == null).length}/{er.roles
+                            >{er.roles.filter((r) => r.assigned_to == "").length}/{er.roles
                                 .length}</td
                         >
                         <th>

@@ -4,10 +4,7 @@
     import type { Event, Role } from "$lib/types";
     import { handleSubmit } from "$lib/utils";
     import { goto } from "$app/navigation";
-    import Delete from "$lib/svg/Delete.svelte";
-    import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton";
-
-    const modalStore = getModalStore();
+    import DeleteButton from "./DeleteButton.svelte";
 
     export let events: Event[];
     export let roles: Role[];
@@ -31,21 +28,6 @@
 
         return handleSubmit(successMsg);
     };
-
-    function handleDelete(event: Event) {
-        const modal: ModalSettings = {
-            type: "confirm",
-            title: "Delete Event",
-            body: `Are you sure you want to delete this scheduled '${event.expand?.event_template.name}' event?'`,
-            response: (r: boolean) => {
-                if (r) {
-                    deleteEventID = event.id;
-                    deleteEventForm.requestSubmit();
-                }
-            },
-        };
-        modalStore.trigger(modal);
-    }
 
     let eventRoles: { event: Event; roles: Role[] }[];
     $: eventRoles = events.map((event) => {
@@ -93,11 +75,12 @@
                                 .length}</td
                         >
                         <th>
-                            <button
-                                class="btn hover:variant-ringed-error"
-                                on:click|preventDefault|stopPropagation={() =>
-                                    handleDelete(er.event)}><Delete /></button
-                            >
+                            <DeleteButton
+                                title="Delete Event"
+                                body={`Are you sure you want to delete this scheduled '${er.event.expand?.event_template.name}' event?'`}
+                                form={deleteEventForm}
+                                presubmit={() => (deleteEventID = er.event.id)}
+                            />
                         </th>
                     </tr>
                 {/each}

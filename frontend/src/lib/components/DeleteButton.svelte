@@ -5,7 +5,8 @@
     export let title: string;
     export let body: string;
     export let form: HTMLFormElement;
-    export let presubmit: () => void;
+    export let presubmit: (() => void) | undefined = undefined;
+    export let action: string | undefined = undefined;
 
     const modalStore = getModalStore();
 
@@ -16,7 +17,12 @@
             body,
             response: (r: boolean) => {
                 if (r) {
-                    presubmit();
+                    if (presubmit) {
+                        presubmit();
+                    }
+                    if (action) {
+                        form.action = action;
+                    }
                     form.requestSubmit();
                 }
             },

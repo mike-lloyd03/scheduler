@@ -3,10 +3,9 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import RoleRow from "./RoleRow.svelte";
     import type { RoleTemplate } from "$lib/types";
-    import Check from "$lib/svg/Check.svelte";
-    import Cancel from "$lib/svg/Cancel.svelte";
     import Add from "$lib/svg/Add.svelte";
     import { handleSubmit } from "$lib/utils";
+    import ActionButton from "$lib/components/ActionButton.svelte";
 
     export let roleTemplates: RoleTemplate[];
 
@@ -61,6 +60,7 @@
                 <tr>
                     {#if newRole}
                         <td>
+                            <!-- svelte-ignore a11y-autofocus -->
                             <input
                                 class="input"
                                 type="text"
@@ -80,15 +80,8 @@
                             />
                         </td>
                         <td>
-                            <button class="btn hover:variant-ringed-success" formaction="?/newRole"
-                                ><Check /></button
-                            >
-                            <button
-                                class="btn hover:variant-ringed-secondary"
-                                on:click|preventDefault={() => {
-                                    newRole = false;
-                                }}><Cancel /></button
-                            >
+                            <ActionButton type="submit" formaction="?/newRole" />
+                            <ActionButton type="cancel" onClick={() => (newRole = false)} />
                         </td>
                     {:else}
                         <td></td>

@@ -4,7 +4,7 @@
     import type { Event, Role } from "$lib/types";
     import { handleSubmit } from "$lib/utils";
     import { goto } from "$app/navigation";
-    import DeleteButton from "./DeleteButton.svelte";
+    import ActionButton from "./ActionButton.svelte";
 
     export let events: Event[];
     export let roles: Role[];
@@ -75,11 +75,12 @@
                                 .length}</td
                         >
                         <th>
-                            <DeleteButton
+                            <ActionButton
+                                type="delete"
                                 title="Delete Event"
                                 body={`Are you sure you want to delete this scheduled '${er.event.expand?.event_template.name}' event?'`}
                                 form={deleteEventForm}
-                                presubmit={() => (deleteEventID = er.event.id)}
+                                onClick={() => (deleteEventID = er.event.id)}
                             />
                         </th>
                     </tr>

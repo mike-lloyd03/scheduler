@@ -1,12 +1,12 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import type { Group } from "$lib/types";
+import type { User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async (event) => {
     const group = await event.locals.pb
-        .collection("groups")
-        .getOne<Group>(event.params.groupID, { expand: "org" });
+        .collection("users")
+        .getOne<User>(event.params.userID, { expand: "orgs,groups" });
     return { group };
 };
 
@@ -15,7 +15,7 @@ export const actions: Actions = {
         const data = await request.formData();
 
         try {
-            await locals.pb.collection("groups").update(params.groupID, data);
+            await locals.pb.collection("users").update(params.userID, data);
         } catch (e) {
             const error = e as ClientResponseError;
             console.log("Error: ", JSON.stringify(error.data));

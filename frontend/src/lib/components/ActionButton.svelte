@@ -4,8 +4,9 @@
     import Edit from "../svg/Edit.svelte";
     import Delete from "../svg/Delete.svelte";
     import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
+    import Add from "$lib/svg/Add.svelte";
 
-    export let type: "add" | "submit" | "edit" | "cancel" | "delete";
+    export let type: "new" | "submit" | "edit" | "cancel" | "delete";
 
     export let onClick: (() => void) | undefined = undefined;
     export let formaction: string | undefined = undefined;
@@ -42,7 +43,11 @@
     }
 </script>
 
-{#if type === "submit" && formaction}
+{#if type === "new" && onClick}
+    <button class="btn hover:variant-ringed-primary" on:click|preventDefault={onClick}
+        ><Add /></button
+    >
+{:else if type === "submit"}
     <button class="btn hover:variant-ringed-success" {formaction}>
         <Check />
     </button>

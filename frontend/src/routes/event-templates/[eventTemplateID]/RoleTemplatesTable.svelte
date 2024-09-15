@@ -3,7 +3,6 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import RoleRow from "./RoleRow.svelte";
     import type { RoleTemplate } from "$lib/types";
-    import Add from "$lib/svg/Add.svelte";
     import { handleSubmit } from "$lib/utils";
     import ActionButton from "$lib/components/ActionButton.svelte";
 
@@ -87,10 +86,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <button
-                                class="btn hover:variant-ringed-primary"
-                                on:click|preventDefault={() => (newRole = true)}><Add /></button
-                            >
+                            <ActionButton type="new" onClick={() => (newRole = true)} />
                         </td>
                     {/if}
                 </tr>

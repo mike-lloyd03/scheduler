@@ -4,12 +4,10 @@
     import InputField from "$lib/fields/InputField.svelte";
     import SelectField from "$lib/fields/SelectField.svelte";
     import type { PageData } from "./$types";
-    import Check from "$lib/svg/Check.svelte";
     import RoleTemplatesTable from "./RoleTemplatesTable.svelte";
     import { handleSubmit } from "$lib/utils";
     import EventsTable from "$lib/components/EventsTable.svelte";
-    import EditButton from "$lib/components/EditButton.svelte";
-    import CancelButton from "$lib/components/CancelButton.svelte";
+    import ActionButton from "$lib/components/ActionButton.svelte";
 
     export let data: PageData;
 
@@ -56,10 +54,10 @@
         </div>
 
         {#if editEventTemplate}
-            <button type="submit" class="btn hover:variant-ringed-success"><Check /></button>
-            <CancelButton onClick={() => (editEventTemplate = false)} />
+            <ActionButton type="submit" />
+            <ActionButton type="cancel" onClick={() => (editEventTemplate = false)} />
         {:else}
-            <EditButton onClick={() => (editEventTemplate = true)} />
+            <ActionButton type="edit" onClick={() => (editEventTemplate = true)} />
         {/if}
     </form>
 

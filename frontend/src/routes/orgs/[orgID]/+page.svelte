@@ -4,6 +4,7 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import InputField from "$lib/fields/InputField.svelte";
     import type { PageData } from "./$types";
+    import ActionButton from "$lib/components/ActionButton.svelte";
 
     export let data: PageData;
 
@@ -42,15 +43,12 @@
             <p><span class="font-bold">Created at:</span> {data.org.created}</p>
             <p><span class="font-bold">Updated at:</span> {data.org.updated}</p>
         </div>
-        <button type="submit" class="variant-filled-primary btn">{edit ? "Save" : "Edit"}</button>
+
         {#if edit}
-            <button
-                type="button"
-                class="variant-filled-secondary btn"
-                on:click={() => (edit = false)}
-            >
-                Cancel
-            </button>
+            <ActionButton type="submit" />
+            <ActionButton type="cancel" onClick={() => (edit = false)} />
+        {:else}
+            <ActionButton type="edit" onClick={() => (edit = true)} />
         {/if}
     </form>
 </div>

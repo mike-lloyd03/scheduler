@@ -5,7 +5,7 @@
     export let data: PageData;
 </script>
 
-<h2 class="h2">Events</h2>
+<h2 class="h2">Event Templates</h2>
 <div class="table-container">
     <table class="table table-interactive table-fixed text-center">
         <thead>

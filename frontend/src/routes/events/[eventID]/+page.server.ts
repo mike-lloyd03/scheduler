@@ -1,4 +1,4 @@
-import type { Role, Event } from "$lib/types";
+import type { Role } from "$lib/types";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals, params }) => {

@@ -10,6 +10,7 @@
     import ActionButton from "$lib/components/ActionButton.svelte";
 
     export let data: PageData;
+    const currentReccurrence = data.eventTemplate.recurrence;
 
     let editEventTemplate = false;
 
@@ -25,6 +26,12 @@
 
         return handleSubmit(successMsg);
     };
+
+    const recurrenceOptions: { value: string | null; label: string }[] = [
+        { value: "daily", label: "Daily" },
+        { value: "weekly", label: "Weekly" },
+        { value: "monthly", label: "Monthly" },
+    ];
 </script>
 
 <div>
@@ -39,8 +46,8 @@
                 <span class="font-bold">Recurrence:</span>
                 <SelectField
                     name="recurrence"
-                    value={data.eventTemplate.recurrence}
-                    options={["daily", "weekly", "monthly"]}
+                    value={{ value: currentReccurrence, label: currentReccurrence }}
+                    options={recurrenceOptions}
                     edit={editEventTemplate}
                 />
             </div>

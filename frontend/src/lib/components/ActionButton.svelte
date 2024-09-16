@@ -13,6 +13,7 @@
     export let title: string | undefined = undefined;
     export let body: string | undefined = undefined;
     export let form: HTMLFormElement | undefined = undefined;
+    export let formID: string | undefined = undefined;
 
     let modalStore: ModalStore;
 
@@ -48,7 +49,7 @@
         ><Add /></button
     >
 {:else if type === "submit"}
-    <button class="btn hover:variant-ringed-success" {formaction}>
+    <button class="btn hover:variant-ringed-success" {formaction} form={formID}>
         <Check />
     </button>
 {:else if type === "edit" && onClick}

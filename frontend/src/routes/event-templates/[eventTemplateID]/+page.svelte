@@ -30,14 +30,20 @@
 <div>
     <form method="POST" use:enhance={submit} action="?/updateEvent">
         <div class="py-4">
-            <InputField title="Name" value={data.eventTemplate.name} edit={editEventTemplate} />
+            <div>
+                <span class="font-bold">Name:</span>
+                <InputField name="name" value={data.eventTemplate.name} edit={editEventTemplate} />
+            </div>
 
-            <SelectField
-                title="Recurrence"
-                value={data.eventTemplate.recurrence}
-                options={["daily", "weekly", "monthly"]}
-                edit={editEventTemplate}
-            />
+            <div>
+                <span class="font-bold">Recurrence:</span>
+                <SelectField
+                    name="recurrence"
+                    value={data.eventTemplate.recurrence}
+                    options={["daily", "weekly", "monthly"]}
+                    edit={editEventTemplate}
+                />
+            </div>
 
             <div>
                 <span class="font-bold">Group:</span>

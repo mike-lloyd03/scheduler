@@ -42,9 +42,12 @@
     <form method="POST" use:enhance={submit}>
         <div class="py-4">
             <p>
-                <InputField title="Name" value={data.group.name} {edit} />
+                <span class="font-bold">Name:</span>
+                <InputField name="name" value={data.group.name} {edit} />
             </p>
+
             <p><span class="font-bold">Created at:</span> {data.group.created}</p>
+
             <p><span class="font-bold">Updated at:</span> {data.group.updated}</p>
         </div>
         <ActionButton type="edit" onClick={() => (edit = true)} />

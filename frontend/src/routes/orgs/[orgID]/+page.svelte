@@ -38,7 +38,8 @@
     <form method="POST" use:enhance={submit}>
         <div class="py-4">
             <p>
-                <InputField title="Name" value={data.org.name} {edit} />
+                <span class="font-bold">Name:</span>
+                <InputField name="name" value={data.org.name} {edit} />
             </p>
             <p><span class="font-bold">Created at:</span> {data.org.created}</p>
             <p><span class="font-bold">Updated at:</span> {data.org.updated}</p>

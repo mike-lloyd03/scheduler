@@ -1,19 +1,20 @@
 <script lang="ts">
-    export let title: string;
-    export let value: string;
-    export let options: string[];
+    export let name: string;
+    export let value: { value: string | null; label: string };
+    export let options: { value: string; label: string }[];
     export let edit: boolean;
 </script>
 
-<div>
-    <span class="font-bold">{title}: </span>
-    {#if edit}
-        <select class="select" id={title.toLowerCase()} name={title.toLowerCase()} {value}>
-            {#each options as option}
-                <option value={option} selected={option == value}>{option}</option>
-            {/each}
-        </select>
-    {:else}
-        {value}
-    {/if}
-</div>
+{#if edit}
+    <select class="select" id={name} {name} value={value.value}>
+        {#each options as option}
+            <option
+                value={option.value}
+                selected={option.label === value.label || option.value === value.value}
+                >{option.label}</option
+            >
+        {/each}
+    </select>
+{:else}
+    {value.label}
+{/if}

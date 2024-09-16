@@ -14,15 +14,10 @@
 
 <tr>
     <td>
-        <InputField title="name" value={roleTemplate.name} {edit} hideTitle />
+        <InputField name="name" value={roleTemplate.name} {edit} />
     </td>
     <td>
-        <TextAreaField
-            title="description"
-            value={roleTemplate.description || ""}
-            {edit}
-            hideTitle
-        />
+        <TextAreaField name="description" value={roleTemplate.description || ""} {edit} />
     </td>
     <td>
         {#if edit}

@@ -17,8 +17,6 @@ export const actions: Actions = {
     default: async ({ request, locals }) => {
         const data = await request.formData();
 
-        data.forEach((v, k) => console.log(`${v} ${k}`));
-
         try {
             await locals.pb.collection("event_templates").create(data);
         } catch (e) {

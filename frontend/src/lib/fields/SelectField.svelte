@@ -1,7 +1,7 @@
 <script lang="ts">
     export let name: string;
     export let value: { value: string | null; label: string };
-    export let options: { value: string; label: string }[];
+    export let options: { value: string | null; label: string }[];
     export let edit: boolean;
 </script>
 

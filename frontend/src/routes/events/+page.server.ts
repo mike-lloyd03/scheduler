@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     const roles = await locals.pb.collection("roles").getFullList<Role>({});
 
-    const users = await locals.pb.collection("users").getFullList<Role>({});
+    const users = await locals.pb.collection("users").getFullList<Role>({ expand: "orgs,groups" });
 
     return { eventTemplates, roleTemplates, events, roles, users };
 };
@@ -26,8 +26,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
     createEvent: async ({ request, locals }) => {
         const data = await request.formData();
-
-        data.forEach((v, k) => console.log(`${k}: ${v}`));
 
         const createEventData = {
             event_template: data.get("event_template"),

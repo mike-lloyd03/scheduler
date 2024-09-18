@@ -20,29 +20,45 @@
         modalStore.close();
     }
 
-    const eventTemplatesAndRoleTemplates: {
+    let eventTemplatesAndRoleTemplates: {
         eventTemplate: EventTemplate;
         roleTemplates: RoleTemplate[];
-    }[] = $modalStore[0].meta.eventTemplates.map((et: EventTemplate) => {
-        let roleTemplates = $modalStore[0].meta.roleTemplates.filter(
-            (rt: RoleTemplate) => (rt.event_template = et.id),
-        );
-        return { eventTemplate: et, roleTemplates };
-    });
-
+    }[];
     let selectedEventRoleTemplates: RoleTemplate[] | undefined;
     let users: User[];
 
+    let createRoles: Record<string, string | null> = {};
+
     $: if ($modalStore[0]) {
-        selectedEventRoleTemplates = eventTemplatesAndRoleTemplates.find(
-            (etrt) => etrt.eventTemplate.id == formData.event_template,
-        )?.roleTemplates;
+        eventTemplatesAndRoleTemplates = $modalStore[0].meta.eventTemplates.map(
+            (et: EventTemplate) => {
+                let roleTemplates = $modalStore[0].meta.roleTemplates.filter(
+                    (rt: RoleTemplate) => rt.event_template == et.id,
+                );
+                return { eventTemplate: et, roleTemplates };
+            },
+        );
         users = $modalStore[0].meta.users;
     }
 
-    let createRoles: Record<string, string | null> = {};
+    $: selectedEventTemplate = eventTemplatesAndRoleTemplates.find(
+        (etrt) => etrt.eventTemplate.id == formData.event_template,
+    );
+    $: selectedEventRoleTemplates = selectedEventTemplate?.roleTemplates;
+    $: groupUsers = users.filter((u) =>
+        u.groups.includes(selectedEventTemplate?.eventTemplate.group || ""),
+    );
+
+    function selectTemplate() {
+        let eventRoles = {};
+        selectedEventRoleTemplates?.forEach((rt) => (eventRoles[rt.id] = null));
+        formData.roles = JSON.stringify(eventRoles);
+        console.log(JSON.stringify(eventRoles));
+    }
+
     function updateCreateRolesValue() {
         formData.roles = JSON.stringify(createRoles);
+        console.log(formData.roles);
     }
 
     const cBase = "card p-4 w-modal shadow-xl space-y-4";
@@ -57,7 +73,11 @@
         <form class="modal-form {cForm}">
             <label class="label">
                 <span>Event Template</span>
-                <select class="select" bind:value={formData.event_template}>
+                <select
+                    class="select"
+                    bind:value={formData.event_template}
+                    on:change={selectTemplate}
+                >
                     {#each $modalStore[0].meta.eventTemplates as et}
                         <option value={et.id}>{et.name}</option>
                     {/each}
@@ -81,7 +101,7 @@
                                 on:change={updateCreateRolesValue}
                             >
                                 <option value={null}>(Unassigned)</option>
-                                {#each users as user}
+                                {#each groupUsers as user}
                                     <option value={user.id}>{user.name}</option>
                                 {/each}
                             </select>

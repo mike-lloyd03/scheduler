@@ -6,6 +6,7 @@
     import { enhance } from "$app/forms";
     import type { SubmitFunction } from "@sveltejs/kit";
     import { handleSubmit } from "$lib/utils";
+    import ModalButton from "$lib/components/ModalButton.svelte";
 
     const modalStore = getModalStore();
 
@@ -56,9 +57,6 @@
 
 <form bind:this={createEventForm} method="POST" action="?/createEvent" use:enhance={submit}></form>
 
-<button
-    class="variant-ringed-primary btn hover:variant-filled-primary"
-    on:click={modalComponentForm}>Schedule Event</button
->
+<ModalButton onClick={modalComponentForm} text="Schedule Event" />
 
 <EventsTable events={data.events} roles={data.roles} enableNav />

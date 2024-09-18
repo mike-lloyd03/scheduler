@@ -10,7 +10,7 @@ export const load: LayoutServerLoad = ({ locals, url }) => {
         return redirect(307, "/login");
     }
 
-    // return {
-    //     currentUser: undefined,
-    // };
+    return {
+        currentUser: undefined,
+    };
 };

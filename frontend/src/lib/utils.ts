@@ -1,5 +1,6 @@
 import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
+import { type ModalComponent, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
 
 export function handleSubmit(successMsg: string) {
     return async ({ result, update }) => {
@@ -35,4 +36,29 @@ export function jsonToFormString(jsonData: object): string {
     console.log("jsonToForm result: ");
 
     return formData.join("&");
+}
+
+export function modalComponentForm(
+    component: any,
+    form: HTMLFormElement,
+    modalStore: ModalStore,
+    presubmit?: (r: any) => void,
+    meta?: object,
+): void {
+    const c: ModalComponent = { ref: component };
+
+    const modal: ModalSettings = {
+        type: "component",
+        component: c,
+        meta,
+        response: (r) => {
+            if (r) {
+                if (presubmit) {
+                    presubmit(r);
+                }
+                form.requestSubmit();
+            }
+        },
+    };
+    modalStore.trigger(modal);
 }

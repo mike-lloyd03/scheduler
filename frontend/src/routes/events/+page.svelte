@@ -1,11 +1,11 @@
 <script lang="ts">
     import EventsTable from "$lib/components/EventsTable.svelte";
     import type { PageData } from "./$types";
-    import { getModalStore, type ModalComponent, type ModalSettings } from "@skeletonlabs/skeleton";
+    import { getModalStore } from "@skeletonlabs/skeleton";
     import ScheduleEventForm from "./ScheduleEventForm.svelte";
     import { enhance } from "$app/forms";
     import type { SubmitFunction } from "@sveltejs/kit";
-    import { handleSubmit } from "$lib/utils";
+    import { handleSubmit, modalComponentForm } from "$lib/utils";
     import ModalButton from "$lib/components/ModalButton.svelte";
 
     const modalStore = getModalStore();
@@ -19,24 +19,22 @@
         roles: "",
     };
 
-    function modalComponentForm(): void {
-        const c: ModalComponent = { ref: ScheduleEventForm };
-        const modal: ModalSettings = {
-            type: "component",
-            component: c,
-            meta: {
-                eventTemplates: data.eventTemplates,
-                roleTemplates: data.roleTemplates,
-                users: data.users,
-            },
-            response: (r) => {
-                if (r) {
-                    createEventFormData = r;
-                    createEventForm.requestSubmit();
-                }
-            },
+    function openModal(): void {
+        const meta = {
+            eventTemplates: data.eventTemplates,
+            roleTemplates: data.roleTemplates,
+            users: data.users,
         };
-        modalStore.trigger(modal);
+
+        modalComponentForm(
+            ScheduleEventForm,
+            createEventForm,
+            modalStore,
+            (r) => {
+                createEventFormData = r;
+            },
+            meta,
+        );
     }
 
     const submit: SubmitFunction = ({ action, formData }) => {
@@ -57,6 +55,6 @@
 
 <form bind:this={createEventForm} method="POST" action="?/createEvent" use:enhance={submit}></form>
 
-<ModalButton onClick={modalComponentForm} text="Schedule Event" />
+<ModalButton onClick={openModal} text="Schedule Event" />
 
 <EventsTable events={data.events} roles={data.roles} enableNav />

@@ -31,10 +31,10 @@ export const actions: Actions = {
     updateRole: async ({ request, locals }) => {
         const data = await request.formData();
 
-        const roleID = data.get("roleID");
+        const roleID = data.get("roleID")?.toString() || "";
 
         try {
-            await locals.pb.collection("roles").update(roleID?.toString() ?? "", data);
+            await locals.pb.collection("roles").update(roleID, data);
         } catch (e) {
             const error = e as ClientResponseError;
             console.log("Error: ", JSON.stringify(error.data));
@@ -48,6 +48,21 @@ export const actions: Actions = {
 
         try {
             await locals.pb.collection("roles").create(data);
+        } catch (e) {
+            const error = e as ClientResponseError;
+            console.log("Error: ", JSON.stringify(error.data));
+
+            return fail(error.status, { message: error.message });
+        }
+    },
+
+    deleteRole: async ({ request, locals }) => {
+        const data = await request.formData();
+
+        const roleID = data.get("roleID")?.toString() || "";
+
+        try {
+            await locals.pb.collection("roles").delete(roleID);
         } catch (e) {
             const error = e as ClientResponseError;
             console.log("Error: ", JSON.stringify(error.data));

@@ -10,6 +10,7 @@
     export let data: PageData;
     let editRole: string | undefined = undefined;
     let newRole: boolean;
+    let deleteRoleForm: HTMLFormElement;
 
     let userOptions: { value: string | null; label: string }[];
     userOptions = data.users.map((u: User) => {
@@ -85,7 +86,21 @@
                             <ActionButton type="submit" formID="form-${role.id}" />
                             <ActionButton type="cancel" onClick={() => (editRole = undefined)} />
                         {:else}
-                            <ActionButton type="edit" onClick={() => (editRole = role.id)} />
+                            <form
+                                method="POST"
+                                action="?/deleteRole"
+                                bind:this={deleteRoleForm}
+                                use:enhance={submit}
+                            >
+                                <input type="hidden" name="roleID" value={role.id} />
+                                <ActionButton type="edit" onClick={() => (editRole = role.id)} />
+                                <ActionButton
+                                    type="delete"
+                                    title="Remove Role"
+                                    body={`Are you sure you want to remove the role '${role.expand?.role_template.name}'?`}
+                                    form={deleteRoleForm}
+                                />
+                            </form>
                         {/if}
                     </td>
                 </tr>

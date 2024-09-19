@@ -54,7 +54,7 @@
                     <th>Event</th>
                 {/if}
                 <th>Date</th>
-                <th>Unassigned Roles</th>
+                <th>Assigned Roles</th>
                 <th>Actions</th>
             </thead>
             <tbody>
@@ -71,7 +71,7 @@
                         {/if}
                         <td>{er.event.datetime}</td>
                         <td
-                            >{er.roles.filter((r) => r.assigned_to == "").length}/{er.roles
+                            >{er.roles.filter((r) => r.assigned_to != "").length}/{er.roles
                                 .length}</td
                         >
                         <th>

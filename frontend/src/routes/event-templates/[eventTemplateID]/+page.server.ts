@@ -39,6 +39,17 @@ export const actions: Actions = {
         }
     },
 
+    deleteEventTemplate: async ({ locals, params }) => {
+        try {
+            await locals.pb.collection("event_templates").delete(params.eventTemplateID);
+        } catch (e) {
+            const error = e as ClientResponseError;
+            console.log("Error: ", JSON.stringify(error.data));
+
+            return fail(error.status, { message: error.message });
+        }
+    },
+
     newRole: async ({ request, locals, params }) => {
         const data = await request.formData();
 

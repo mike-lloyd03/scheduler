@@ -8,9 +8,12 @@
     import { handleSubmit } from "$lib/utils";
     import EventsTable from "$lib/components/EventsTable.svelte";
     import ActionButton from "$lib/components/ActionButton.svelte";
+    import { goto } from "$app/navigation";
 
     export let data: PageData;
     const currentReccurrence = data.eventTemplate.recurrence;
+
+    let form: HTMLFormElement;
 
     let editEventTemplate = false;
 
@@ -22,6 +25,8 @@
                 editEventTemplate = false;
                 successMsg = "Event Template updated";
                 break;
+            case "?/deleteEventTemplate":
+                return goto("/event-templates");
         }
 
         return handleSubmit(successMsg);
@@ -35,7 +40,7 @@
 </script>
 
 <div>
-    <form method="POST" use:enhance={submit} action="?/updateEvent">
+    <form method="POST" bind:this={form} use:enhance={submit} action="?/updateEvent">
         <div class="py-4">
             <div>
                 <span class="font-bold">Name:</span>
@@ -71,6 +76,13 @@
             <ActionButton type="cancel" onClick={() => (editEventTemplate = false)} />
         {:else}
             <ActionButton type="edit" onClick={() => (editEventTemplate = true)} />
+            <ActionButton
+                type="delete"
+                title="Delete Event Template"
+                body={`Are you sure you want to delete the event template '${data.eventTemplate.name}'?`}
+                {form}
+                formaction="?/deleteEventTemplate"
+            />
         {/if}
     </form>
 

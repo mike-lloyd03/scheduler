@@ -2,12 +2,15 @@ import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
 import { type ModalComponent, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
 
-export function handleSubmit(successMsg: string) {
+export function handleSubmit(successMsg: string, onSuccess: (() => void) | undefined = undefined) {
     return async ({ result, update }) => {
         switch (result.type) {
             case "success":
                 toast.success(successMsg);
                 await update();
+                if (onSuccess) {
+                    onSuccess();
+                }
                 break;
             case "failure":
                 toast.error(result.data?.message || "Something went wrong");

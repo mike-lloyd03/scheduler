@@ -3,9 +3,9 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    const firstOrg = data.orgs[0];
+    const first = data.orgs[0];
 
-    if (firstOrg) {
-        goto(`/orgs/${firstOrg.id}`);
+    if (first) {
+        goto(`/orgs/${first.id}`);
     }
 </script>

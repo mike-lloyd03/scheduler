@@ -5,41 +5,28 @@
     import InputField from "$lib/fields/InputField.svelte";
     import type { PageData } from "./$types";
     import ActionButton from "$lib/components/ActionButton.svelte";
+    import { handleSubmit } from "$lib/utils";
 
     export let data: PageData;
 
     let edit = false;
-    let loading = false;
 
-    const submit: SubmitFunction = ({ cancel }) => {
-        loading = true;
-
-        if (edit == false) {
-            edit = true;
-            cancel();
-            return;
-        }
-
-        return async ({ result, update }) => {
-            edit = false;
-            switch (result.type) {
-                case "success":
-                    toast.success("Group updated");
-                    await update();
-                    break;
-                case "failure":
-                    toast.error(result.data?.message || "Something went wrong");
-                    break;
-                default:
-                    await update();
-            }
-            loading = false;
-        };
+    const submit: SubmitFunction = () => {
+        edit = false;
+        return handleSubmit("Group updated");
     };
 </script>
 
+<header class="flex-end card variant-filled-surface flex justify-end">
+    {#if edit}
+        <ActionButton type="submit" formID="form" />
+        <ActionButton type="cancel" onClick={() => (edit = false)} />
+    {:else}
+        <ActionButton type="edit" onClick={() => (edit = true)} />
+    {/if}
+</header>
 <div>
-    <form method="POST" use:enhance={submit}>
+    <form id="form" method="POST" use:enhance={submit}>
         <div class="py-4">
             <p>
                 <span class="font-bold">Name:</span>
@@ -49,12 +36,5 @@
             <p><span class="font-bold">Created at:</span> {data.group.created}</p>
             <p><span class="font-bold">Updated at:</span> {data.group.updated}</p>
         </div>
-
-        {#if edit}
-            <ActionButton type="submit" />
-            <ActionButton type="cancel" onClick={() => (edit = false)} />
-        {:else}
-            <ActionButton type="edit" onClick={() => (edit = true)} />
-        {/if}
     </form>
 </div>

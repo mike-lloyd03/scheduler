@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { LayoutData } from "./$types";
     import { page } from "$app/stores";
-    import NavPage from "$lib/components/NavPage.svelte";
+    import NavLayout from "$lib/components/NavLayout.svelte";
 
     export let data: LayoutData;
 
@@ -10,6 +10,6 @@
     });
 </script>
 
-<NavPage title="Groups" {items} urlPath={$page.url.pathname}>
+<NavLayout title="Groups" {items} urlPath={$page.url.pathname}>
     <slot></slot>
-</NavPage>
+</NavLayout>

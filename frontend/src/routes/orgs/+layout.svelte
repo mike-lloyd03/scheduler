@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { LayoutData } from "./$types";
     import { page } from "$app/stores";
-    import NavPage from "$lib/components/NavPage.svelte";
+    import NavLayout from "$lib/components/NavLayout.svelte";
     import ActionButton from "$lib/components/ActionButton.svelte";
     import { goto } from "$app/navigation";
 
@@ -12,9 +12,9 @@
     });
 </script>
 
-<NavPage title="Organizations" {items} urlPath={$page.url.pathname}>
+<NavLayout title="Organizations" {items} urlPath={$page.url.pathname}>
     <div class="flex" slot="actions">
         <ActionButton type="new" onClick={() => goto("/orgs/newOrg")} />
     </div>
     <slot />
-</NavPage>
+</NavLayout>

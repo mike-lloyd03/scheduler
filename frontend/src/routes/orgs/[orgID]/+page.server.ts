@@ -6,7 +6,7 @@ import type { ClientResponseError } from "pocketbase";
 export const load: PageServerLoad = async ({ locals, params }) => {
     let org: Org;
 
-    if (params.orgID == "lastOrg") {
+    if (params.orgID == "last") {
         org = await locals.pb
             .collection("orgs")
             .getFirstListItem<Org>("", { sort: "-created", perPage: 1 });

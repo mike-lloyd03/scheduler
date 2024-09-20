@@ -14,7 +14,7 @@
 
 <NavLayout title="Organizations" {items} urlPath={$page.url.pathname}>
     <div class="flex" slot="actions">
-        <ActionButton type="new" onClick={() => goto("/orgs/newOrg")} />
+        <ActionButton type="new" onClick={() => goto("/orgs/new")} />
     </div>
     <slot />
 </NavLayout>

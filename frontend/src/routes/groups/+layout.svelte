@@ -2,6 +2,8 @@
     import type { LayoutData } from "./$types";
     import { page } from "$app/stores";
     import NavLayout from "$lib/components/NavLayout.svelte";
+    import ActionButton from "$lib/components/ActionButton.svelte";
+    import { goto } from "$app/navigation";
 
     export let data: LayoutData;
 
@@ -11,5 +13,8 @@
 </script>
 
 <NavLayout title="Groups" {items} urlPath={$page.url.pathname}>
-    <slot></slot>
+    <div class="flex" slot="actions">
+        <ActionButton type="new" onClick={() => goto("/groups/new")} />
+    </div>
+    <slot />
 </NavLayout>

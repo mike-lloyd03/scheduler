@@ -3,22 +3,9 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-</script>
+    const firstOrg = data.orgs[0];
 
-<h2 class="h2">Organizations</h2>
-<div class="table-container">
-    <table class="table table-hover table-fixed text-center">
-        <thead>
-            <th>Group</th>
-            <th>Created At</th>
-        </thead>
-        <tbody>
-            {#each data.orgs as org}
-                <tr class="cursor-pointer" on:click={() => goto(`/orgs/${org.id}`)}>
-                    <td>{org.name}</td>
-                    <td>{org.created}</td>
-                </tr>
-            {/each}
-        </tbody>
-    </table>
-</div>
+    if (firstOrg) {
+        goto(`/orgs/${firstOrg.id}`);
+    }
+</script>

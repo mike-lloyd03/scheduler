@@ -34,8 +34,16 @@
     };
 </script>
 
+<header class="flex-end card variant-filled-surface flex justify-end">
+    {#if edit}
+        <ActionButton type="submit" formID="form" />
+        <ActionButton type="cancel" onClick={() => (edit = false)} />
+    {:else}
+        <ActionButton type="edit" onClick={() => (edit = true)} />
+    {/if}
+</header>
 <div>
-    <form method="POST" use:enhance={submit}>
+    <form id="form" method="POST" use:enhance={submit}>
         <div class="py-4">
             <p>
                 <span class="font-bold">Name:</span>
@@ -44,12 +52,5 @@
             <p><span class="font-bold">Created at:</span> {data.org.created}</p>
             <p><span class="font-bold">Updated at:</span> {data.org.updated}</p>
         </div>
-
-        {#if edit}
-            <ActionButton type="submit" />
-            <ActionButton type="cancel" onClick={() => (edit = false)} />
-        {:else}
-            <ActionButton type="edit" onClick={() => (edit = true)} />
-        {/if}
     </form>
 </div>

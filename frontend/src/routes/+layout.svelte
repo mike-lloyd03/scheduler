@@ -67,7 +67,7 @@
         {/if}
     </svelte:fragment>
 
-    <div class="container h-max space-y-4 p-10">
+    <div class="container h-full max-w-screen-xl space-y-4 p-10">
         <slot />
     </div>
 </AppShell>

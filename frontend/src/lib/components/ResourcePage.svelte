@@ -7,7 +7,6 @@
 
     export let edit = false;
     export let title: string;
-    export let title: string;
     export let baseURL: string;
     export let deleteBody: string;
 

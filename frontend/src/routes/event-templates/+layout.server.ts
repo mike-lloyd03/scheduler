@@ -4,7 +4,7 @@ import type { LayoutServerLoad } from "./$types";
 export const load: LayoutServerLoad = async ({ locals }) => {
     const eventTemplates = await locals.pb
         .collection("event_templates")
-        .getFullList<EventTemplate>({ expand: "group" });
+        .getFullList<EventTemplate>({ expand: "group", sort: "name" });
 
     return { eventTemplates };
 };

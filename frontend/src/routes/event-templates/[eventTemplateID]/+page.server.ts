@@ -1,12 +1,20 @@
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import type { RoleTemplate, EventTemplate, Role, Event } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-    const eventTemplate = await locals.pb
-        .collection("event_templates")
-        .getOne<EventTemplate>(params.eventTemplateID, { expand: "group" });
+    let eventTemplate: EventTemplate;
+    if (params.eventTemplateID == "last") {
+        eventTemplate = await locals.pb
+            .collection("event_templates")
+            .getFirstListItem<EventTemplate>("", { sort: "-created", perPage: 1 });
+        throw redirect(307, `/event-templates/${eventTemplate.id}`);
+    } else {
+        eventTemplate = await locals.pb
+            .collection("event_templates")
+            .getOne<EventTemplate>(params.eventTemplateID, { expand: "group" });
+    }
 
     const roleTemplates = await locals.pb.collection("role_templates").getFullList<RoleTemplate>({
         filter: `(event_template='${params.eventTemplateID}')`,
@@ -26,7 +34,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 };
 
 export const actions: Actions = {
-    updateEvent: async ({ request, locals, params }) => {
+    updateEventTemplate: async ({ request, locals, params }) => {
         const data = await request.formData();
 
         try {

@@ -9,6 +9,8 @@
     export let title: string;
     export let baseURL: string;
     export let deleteBody: string;
+    export let updateAction = "?/update";
+    export let deleteAction = "?/delete";
 
     let deleteForm: HTMLFormElement;
 
@@ -17,11 +19,11 @@
         let onSuccess = undefined;
 
         switch (action.search) {
-            case "?/update":
+            case updateAction:
                 successMsg = `${title} updated`;
                 edit = false;
                 break;
-            case "?/delete":
+            case deleteAction:
                 successMsg = `${title} deleted`;
                 onSuccess = () => goto(baseURL);
                 break;
@@ -30,7 +32,7 @@
     };
 </script>
 
-<form method="POST" action="?/delete" use:enhance={submit} bind:this={deleteForm}></form>
+<form method="POST" action={deleteAction} use:enhance={submit} bind:this={deleteForm}></form>
 
 <header class="flex-end card variant-filled-surface flex justify-end">
     {#if edit}
@@ -42,7 +44,7 @@
     {/if}
 </header>
 <div>
-    <form id="form" method="POST" action="?/update" use:enhance={submit}>
+    <form id="form" method="POST" action={updateAction} use:enhance={submit}>
         <div class="py-4">
             <slot />
         </div>

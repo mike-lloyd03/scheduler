@@ -1,63 +1,15 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import type { SubmitFunction } from "@sveltejs/kit";
+    import { onMount } from "svelte";
     import type { PageData } from "./$types";
-    import { handleSubmit, modalComponentForm } from "$lib/utils";
-    import { enhance } from "$app/forms";
-    import { getModalStore, type ModalComponent, type ModalSettings } from "@skeletonlabs/skeleton";
-    import CreateEventTemplateForm from "./CreateEventTemplateForm.svelte";
-    import ModalButton from "$lib/components/ModalButton.svelte";
-
-    const modalStore = getModalStore();
 
     export let data: PageData;
 
-    let createForm: HTMLFormElement;
-    let createFormData = {
-        name: "",
-        recurrence: "",
-        group: "",
-    };
+    onMount(() => {
+        const first = data.eventTemplates[0];
 
-    function openModal(): void {
-        modalComponentForm(
-            CreateEventTemplateForm,
-            createForm,
-            modalStore,
-            (r) => (createFormData = r),
-            { groups: data.groups },
-        );
-    }
-
-    const submit: SubmitFunction = ({ formData }) => {
-        formData.set("name", createFormData.name);
-        formData.set("recurrence", createFormData.recurrence);
-        formData.set("group", createFormData.group);
-
-        return handleSubmit("Event template created");
-    };
+        if (first) {
+            goto(`/event-templates/${first.id}`);
+        }
+    });
 </script>
-
-<form bind:this={createForm} method="POST" use:enhance={submit}></form>
-
-<ModalButton onClick={openModal} text="Create Event Template" />
-
-<h2 class="h2">Event Templates</h2>
-<div class="table-container">
-    <table class="table table-interactive table-fixed text-center">
-        <thead>
-            <th>Name</th>
-            <th>Recurrence</th>
-            <th>Group</th>
-        </thead>
-        <tbody>
-            {#each data.eventTemplates as eventTemplate}
-                <tr on:click={() => goto(`/event-templates/${eventTemplate.id}`)}>
-                    <td>{eventTemplate.name}</td>
-                    <td>{eventTemplate.recurrence}</td>
-                    <td>{eventTemplate.expand?.group.name || ""}</td>
-                </tr>
-            {/each}
-        </tbody>
-    </table>
-</div>

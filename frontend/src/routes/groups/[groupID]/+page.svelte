@@ -2,6 +2,7 @@
     import InputField from "$lib/fields/InputField.svelte";
     import type { PageData } from "./$types";
     import ResourcePage from "$lib/components/ResourcePage.svelte";
+    import { toLocaleDateTime } from "$lib/utils";
 
     export let data: PageData;
 
@@ -20,6 +21,6 @@
         <InputField name="name" value={data.group.name} {edit} />
     </p>
     <p><span class="font-bold">Organization:</span> {data.group.expand?.org.name}</p>
-    <p><span class="font-bold">Created at:</span> {data.group.created}</p>
-    <p><span class="font-bold">Updated at:</span> {data.group.updated}</p>
+    <p><span class="font-bold">Created at:</span> {toLocaleDateTime(data.group.created)}</p>
+    <p><span class="font-bold">Updated at:</span> {toLocaleDateTime(data.group.updated)}</p>
 </ResourcePage>

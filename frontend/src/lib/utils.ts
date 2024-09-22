@@ -1,6 +1,7 @@
 import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
 import { type ModalComponent, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
+import { DateTime } from "luxon";
 
 export function handleSubmit(successMsg: string, onSuccess: (() => void) | undefined = undefined) {
     return async ({ result, update }) => {
@@ -64,4 +65,14 @@ export function modalComponentForm(
         },
     };
     modalStore.trigger(modal);
+}
+
+export function toLocaleDateTime(dateString: string): string {
+    const date = DateTime.fromSQL(dateString);
+    return date.toLocaleString(DateTime.DATETIME_SHORT);
+}
+
+export function toLocaleDate(dateString: string): string {
+    const date = DateTime.fromSQL(dateString);
+    return date.toLocaleString(DateTime.DATE_SHORT);
 }

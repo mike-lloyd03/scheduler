@@ -6,6 +6,7 @@
     import type { PageData } from "./$types";
     import { handleSubmit } from "$lib/utils";
     import { enhance } from "$app/forms";
+    import { toLocaleDateTime } from "$lib/utils";
 
     export let data: PageData;
     let editRole: string | undefined = undefined;
@@ -42,7 +43,7 @@
 
 <div>
     <p>{data.event.expand?.event_template.name}</p>
-    <p>{data.event.datetime}</p>
+    <p>{toLocaleDateTime(data.event.datetime)}</p>
 </div>
 
 <div>

@@ -1,3 +1,5 @@
+import type { DateTime } from "luxon";
+
 export enum UserRole {
     Admin = "admin",
     Manager = "manager",
@@ -15,8 +17,8 @@ export type Org = {
     name: string;
     collectionId: string;
     collectionName: string;
-    created: string;
-    updated: string;
+    created: DateTime;
+    updated: DateTime;
 };
 
 export type Group = {

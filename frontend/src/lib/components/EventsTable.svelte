@@ -5,6 +5,7 @@
     import { handleSubmit } from "$lib/utils";
     import { goto } from "$app/navigation";
     import ActionButton from "./ActionButton.svelte";
+    import { toLocaleDate } from "$lib/utils";
 
     export let events: Event[];
     export let roles: Role[];
@@ -69,7 +70,7 @@
                         {#if !hideEventName}
                             <td>{er.event.expand?.event_template.name}</td>
                         {/if}
-                        <td>{er.event.datetime}</td>
+                        <td>{toLocaleDate(er.event.datetime)}</td>
                         <td
                             >{er.roles.filter((r) => r.assigned_to != "").length}/{er.roles
                                 .length}</td

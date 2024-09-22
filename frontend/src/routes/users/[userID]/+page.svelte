@@ -2,6 +2,7 @@
     import InputField from "$lib/fields/InputField.svelte";
     import type { PageData } from "./$types";
     import ResourcePage from "$lib/components/ResourcePage.svelte";
+    import { toLocaleDateTime } from "$lib/utils";
 
     export let data: PageData;
     let edit = false;
@@ -24,8 +25,8 @@
             <InputField name="email" value={data.user.email} {edit} />
         </p>
 
-        <p><span class="font-bold">Created at:</span> {data.user.created}</p>
+        <p><span class="font-bold">Created at:</span> {toLocaleDateTime(data.user.created)}</p>
 
-        <p><span class="font-bold">Updated at:</span> {data.user.updated}</p>
+        <p><span class="font-bold">Updated at:</span> {toLocaleDateTime(data.user.updated)}</p>
     </div>
 </ResourcePage>

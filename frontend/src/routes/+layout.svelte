@@ -40,7 +40,7 @@
             <h2 class="p-4">Navigation</h2>
         </div>
         <hr />
-        <Navigation {drawerClose} />
+        <Navigation {drawerClose} user={data.currentUser} />
     </Drawer>
 {/if}
 
@@ -63,7 +63,7 @@
 
     <svelte:fragment slot="sidebarLeft">
         {#if data.currentUser}
-            <Navigation />
+            <Navigation user={data.currentUser} />
         {/if}
     </svelte:fragment>
 

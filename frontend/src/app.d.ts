@@ -1,5 +1,4 @@
 import type { Org, Group, EventTemplate, RoleTemplate, User, Event, Role } from "$lib/types";
-import type { AuthModel } from "pocketbase";
 import type PocketBase from "pocketbase";
 
 // See https://kit.svelte.dev/docs/types#app
@@ -9,10 +8,10 @@ declare global {
         // interface Error {}
         interface Locals {
             pb: PocketBase;
-            currentUser: AuthModel | undefined;
+            currentUser: User | undefined;
         }
         interface PageData {
-            currentUser: AuthModel | undefined;
+            currentUser: User | undefined;
             orgs?: Org[];
             org?: Org;
             groups?: Group[];

@@ -12,7 +12,6 @@
     export let formaction: string | undefined = undefined;
     export let title: string | undefined = undefined;
     export let body: string | undefined = undefined;
-    export let form: HTMLFormElement | undefined = undefined;
     export let formID: string | undefined = undefined;
 
     let modalStore: ModalStore;
@@ -31,11 +30,16 @@
                     if (onClick) {
                         onClick();
                     }
-                    if (form) {
-                        if (formaction) {
-                            form.action = formaction;
+                    if (formID) {
+                        const form: HTMLFormElement | null = document.getElementById(
+                            formID,
+                        ) as HTMLFormElement | null;
+                        if (form) {
+                            if (formaction) {
+                                form.action = formaction;
+                            }
+                            form.requestSubmit();
                         }
-                        form.requestSubmit();
                     }
                 }
             },
@@ -60,7 +64,7 @@
     <button class="btn hover:variant-ringed-secondary" on:click|preventDefault={onClick}>
         <Cancel />
     </button>
-{:else if type === "delete" && title && body && form}
+{:else if type === "delete" && title && body && formID}
     <button
         class="btn hover:variant-ringed-error"
         on:click|preventDefault|stopPropagation={handleDelete}

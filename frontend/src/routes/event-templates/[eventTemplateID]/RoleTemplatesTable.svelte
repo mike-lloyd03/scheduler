@@ -12,8 +12,6 @@
     let deleteRoleTemplate: string | null;
     let newRole: boolean;
 
-    let formElement: HTMLFormElement;
-
     const submit: SubmitFunction = ({ action, formData }) => {
         let successMsg = "Successful";
 
@@ -40,7 +38,7 @@
 
 <h3 class="h3">Event Roles</h3>
 <div class="table-container">
-    <form bind:this={formElement} method="POST" use:enhance={submit}>
+    <form id="roleForm" method="POST" use:enhance={submit}>
         <table class="table table-hover table-fixed text-center">
             <thead>
                 <th>Role</th>
@@ -49,12 +47,7 @@
             </thead>
             <tbody>
                 {#each roleTemplates as roleTemplate}
-                    <RoleRow
-                        {roleTemplate}
-                        bind:editRoleTemplate
-                        bind:deleteRoleTemplate
-                        {formElement}
-                    />
+                    <RoleRow {roleTemplate} bind:editRoleTemplate bind:deleteRoleTemplate />
                 {/each}
                 <tr>
                     {#if newRole}

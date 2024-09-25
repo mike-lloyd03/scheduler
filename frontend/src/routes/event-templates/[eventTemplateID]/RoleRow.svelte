@@ -7,7 +7,6 @@
     export let roleTemplate: RoleTemplate;
     export let editRoleTemplate: string | null;
     export let deleteRoleTemplate: string | null;
-    export let formElement: HTMLFormElement;
 
     $: edit = roleTemplate.id == editRoleTemplate;
 </script>
@@ -29,7 +28,7 @@
                 type="delete"
                 title="Delete Role Template"
                 body={`Are you sure you want to delete role template '${roleTemplate.name}'?`}
-                form={formElement}
+                formID="roleForm"
                 onClick={() => (deleteRoleTemplate = roleTemplate.id)}
                 formaction="?/deleteRole"
             />

@@ -12,8 +12,6 @@
     export let updateAction = "?/update";
     export let deleteAction = "?/delete";
 
-    let deleteForm: HTMLFormElement;
-
     const submit: SubmitFunction = ({ action }) => {
         let successMsg = "Success";
         let onSuccess = undefined;
@@ -32,7 +30,7 @@
     };
 </script>
 
-<form method="POST" action={deleteAction} use:enhance={submit} bind:this={deleteForm}></form>
+<form method="POST" action={deleteAction} use:enhance={submit} id="deleteForm"></form>
 
 <header class="flex-end card variant-filled-surface flex justify-end">
     {#if edit}
@@ -40,7 +38,7 @@
         <ActionButton type="cancel" onClick={() => (edit = false)} />
     {:else}
         <ActionButton type="edit" onClick={() => (edit = true)} />
-        <ActionButton type="delete" title="Delete {title}" body={deleteBody} form={deleteForm} />
+        <ActionButton type="delete" title="Delete {title}" body={deleteBody} formID="deleteForm" />
     {/if}
 </header>
 <div>

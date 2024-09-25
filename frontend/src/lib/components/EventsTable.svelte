@@ -12,8 +12,6 @@
     export let hideEventName = false;
     export let enableNav = false;
 
-    let deleteEventForm: HTMLFormElement;
-
     let deleteEventID: string | null;
 
     const submit: SubmitFunction = ({ action, formData }) => {
@@ -37,12 +35,7 @@
     });
 </script>
 
-<form
-    bind:this={deleteEventForm}
-    method="POST"
-    action="/events?/deleteEvent"
-    use:enhance={submit}
-></form>
+<form id="deleteEventForm" method="POST" action="/events?/deleteEvent" use:enhance={submit}></form>
 
 <h3 class="h3">Scheduled Events</h3>
 <div class="table-container">
@@ -80,7 +73,7 @@
                                 type="delete"
                                 title="Delete Event"
                                 body={`Are you sure you want to delete this scheduled '${er.event.expand?.event_template.name}' event?'`}
-                                form={deleteEventForm}
+                                formID="deleteEventForm"
                                 onClick={() => (deleteEventID = er.event.id)}
                             />
                         </th>

@@ -7,10 +7,13 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import { handleSubmit, modalComponentForm } from "$lib/utils";
     import ModalButton from "$lib/components/ModalButton.svelte";
+    import { breadcrumbs } from "$lib/stores";
 
     const modalStore = getModalStore();
 
     export let data: PageData;
+
+    breadcrumbs.add("Events", "events");
 
     let createEventForm: HTMLFormElement;
     let createEventFormData = {

@@ -6,10 +6,15 @@
     import EventsTable from "$lib/components/EventsTable.svelte";
     import ResourcePage from "$lib/components/ResourcePage.svelte";
     import { toLocaleDateTime } from "$lib/utils";
+    import { breadcrumbs } from "$lib/stores";
 
     export let data: PageData;
-    const currentReccurrence = data.eventTemplate.recurrence;
 
+    $: breadcrumbs
+        .add("Event Templates", "event-templates")
+        .add(data.eventTemplate.name, data.eventTemplate.id);
+
+    const currentReccurrence = data.eventTemplate.recurrence;
     let editEventTemplate = false;
 
     const recurrenceOptions: { value: string | null; label: string }[] = [

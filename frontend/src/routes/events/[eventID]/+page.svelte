@@ -7,8 +7,12 @@
     import { handleSubmit } from "$lib/utils";
     import { enhance } from "$app/forms";
     import { toLocaleDateTime } from "$lib/utils";
+    import { breadcrumbs } from "$lib/stores";
 
     export let data: PageData;
+
+    breadcrumbs.add("Events", "events").add(data.event.expand?.event_template.name, data.event.id);
+
     let editRole: string | undefined = undefined;
     let newRole: boolean;
     let deleteRoleForm: HTMLFormElement;

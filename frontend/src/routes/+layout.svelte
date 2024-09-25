@@ -4,11 +4,17 @@
     import { initializeStores, Drawer, Modal, getDrawerStore } from "@skeletonlabs/skeleton";
     import "../app.css";
     import Navigation from "./Navigation.svelte";
+    import Breadcrumbs from "./Breadcrumbs.svelte";
     import type { PageData } from "./$types";
     import Hamburger from "$lib/svg/Hamburger.svelte";
-    import { page } from "$app/stores";
+    import { navigating, page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { onMount } from "svelte";
+    import { breadcrumbs } from "$lib/stores";
+
+    $: if ($navigating) {
+        breadcrumbs.clear();
+    }
 
     export let data: PageData;
 
@@ -66,6 +72,8 @@
             <Navigation user={data.currentUser} />
         {/if}
     </svelte:fragment>
+
+    <Breadcrumbs />
 
     <div class="container h-full max-w-screen-xl space-y-4 p-10">
         <slot />

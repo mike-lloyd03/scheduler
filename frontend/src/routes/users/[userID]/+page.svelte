@@ -3,8 +3,12 @@
     import type { PageData } from "./$types";
     import ResourcePage from "$lib/components/ResourcePage.svelte";
     import { toLocaleDateTime } from "$lib/utils";
+    import { breadcrumbs } from "$lib/stores";
 
     export let data: PageData;
+
+    $: breadcrumbs.add("Users", "users").add(data.user.name, data.user.id);
+
     let edit = false;
 </script>
 

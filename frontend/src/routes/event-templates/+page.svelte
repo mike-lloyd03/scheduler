@@ -4,7 +4,7 @@
     import type { PageData } from "./$types";
     import { breadcrumbs } from "$lib/stores";
 
-    breadcrumbs.add("Event Templates", "event_templates");
+    breadcrumbs.clear().add("Event Templates", "event_templates");
 
     export let data: PageData;
 

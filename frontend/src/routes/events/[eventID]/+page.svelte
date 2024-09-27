@@ -11,7 +11,10 @@
 
     export let data: PageData;
 
-    breadcrumbs.add("Events", "events").add(data.event.expand?.event_template.name, data.event.id);
+    breadcrumbs
+        .clear()
+        .add("Events", "events")
+        .add(data.event.expand?.event_template.name, data.event.id);
 
     let editRole: string | undefined = undefined;
     let newRole: boolean;

@@ -6,7 +6,7 @@
 
     export let data: PageData;
 
-    breadcrumbs.add("Groups", "groups");
+    breadcrumbs.clear().add("Groups", "groups");
 
     onMount(() => {
         const first = data.groups[0];

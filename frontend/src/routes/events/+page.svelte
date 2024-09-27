@@ -13,7 +13,7 @@
 
     export let data: PageData;
 
-    breadcrumbs.add("Events", "events");
+    breadcrumbs.clear().add("Events", "events");
 
     let createEventForm: HTMLFormElement;
     let createEventFormData = {

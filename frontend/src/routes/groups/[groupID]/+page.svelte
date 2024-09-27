@@ -7,7 +7,7 @@
 
     export let data: PageData;
 
-    $: breadcrumbs.add("Groups", "groups").add(data.group.name, data.group.id);
+    $: breadcrumbs.clear().add("Groups", "groups").add(data.group.name, data.group.id);
 
     let edit = false;
 </script>

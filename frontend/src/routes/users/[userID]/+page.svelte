@@ -7,7 +7,7 @@
 
     export let data: PageData;
 
-    $: breadcrumbs.add("Users", "users").add(data.user.name, data.user.id);
+    $: breadcrumbs.clear().add("Users", "users").add(data.user.name, data.user.id);
 
     let edit = false;
 </script>

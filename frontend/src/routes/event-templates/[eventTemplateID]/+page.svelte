@@ -11,6 +11,7 @@
     export let data: PageData;
 
     $: breadcrumbs
+        .clear()
         .add("Event Templates", "event-templates")
         .add(data.eventTemplate.name, data.eventTemplate.id);
 

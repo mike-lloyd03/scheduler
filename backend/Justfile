@@ -1,0 +1,5 @@
+run:
+    go run main.go serve
+
+run_test:
+    go run main.go serve --dir="./test_pb_data"

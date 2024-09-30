@@ -1,38 +1,25 @@
-# create-svelte
+# Scheduler
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+App for scheduling people for things.
 
-## Creating a project
+## Resource Permissions
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+-   Orgs
+    -   Created and Deleted by Super Admins
+    -   Updated by Org Admins of that Org
+    -   List and View by all users in that Org
+-   Groups
+    -   Created and Deleted by Org admins of the owning group
+    -   Updated by Org Admins of the owning org and Group Admins of that group
+    -   List and View by all users in that Org
+-   Event Templates
+    -   Created, Deleted, and Updated by Org Admins of the owning org and Group Admins of the owning group
+    -   List and View by Org Admins of the owning org and Group Admins of the owning group
+-   Events
+    -   Created and Deleted by Org and Group Admins
+    -   Created, Deleted, and Updated by Org Admins of the owning org and Group Admins of the owning group
+    -   List and View by Org Admins of the owning org and Group Admins of the owning group and all members in the group
+-   Roles
+    -   Created and Deleted by Org and Group Admins
+    -   Created, Deleted, and Updated by Org Admins of the owning org and Group Admins of the owning group
+    -   List and View by Org Admins of the owning org and Group Admins of the owning group and all members in the group

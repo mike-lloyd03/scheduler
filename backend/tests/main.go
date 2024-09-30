@@ -14,6 +14,14 @@ const OnModelAfterUpdate = "OnModelAfterUpdate"
 const OnModelBeforeUpdate = "OnModelBeforeUpdate"
 const OnRecordAfterUpdateRequest = "OnRecordAfterUpdateRequest"
 const OnRecordBeforeUpdateRequest = "OnRecordBeforeUpdateRequest"
+const OnModelAfterCreate = "OnModelAfterCreate"
+const OnModelBeforeCreate = "OnModelBeforeCreate"
+const OnRecordAfterCreateRequest = "OnRecordAfterCreateRequest"
+const OnRecordBeforeCreateRequest = "OnRecordBeforeCreateRequest"
+const OnModelAfterDelete = "OnModelAfterDelete"
+const OnModelBeforeDelete = "OnModelBeforeDelete"
+const OnRecordAfterDeleteRequest = "OnRecordAfterDeleteRequest"
+const OnRecordBeforeDeleteRequest = "OnRecordBeforeDeleteRequest"
 
 func clearTable(app *tests.TestApp, table string) error {
 	records, err := app.Dao().FindRecordsByExpr(table)

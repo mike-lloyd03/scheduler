@@ -12,7 +12,7 @@ import (
 // Org Admin can list, view, create, update, delete groups in own org
 // Group admin can list, view, update own groups
 // Group member can list, view own groups
-func TestOrgs(t *testing.T) {
+func TestGroups(t *testing.T) {
 	app := generateTestApp(t)
 
 	org1AdminHeader, err := generateAuthHeader(app, "users", "org1Admin")
@@ -95,7 +95,7 @@ func TestOrgs(t *testing.T) {
 			TestAppFactory:  generateTestApp,
 		},
 		{
-			Name:            "unauth cannot delete org",
+			Name:            "unauth cannot delete group",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
 			ExpectedStatus:  404,
@@ -106,12 +106,15 @@ func TestOrgs(t *testing.T) {
 		// org admin
 		// -----------
 		{
-			Name:               "org admins can list own org's groups",
-			Method:             http.MethodGet,
-			Url:                "/api/collections/groups/records",
-			RequestHeaders:     org1AdminHeader,
-			ExpectedStatus:     200,
-			ExpectedContent:    []string{`"name":"org1group1"`, `"totalItems":1`},
+			Name:           "org admins can list own org's groups",
+			Method:         http.MethodGet,
+			Url:            "/api/collections/groups/records",
+			RequestHeaders: org1AdminHeader,
+			ExpectedStatus: 200,
+			ExpectedContent: []string{
+				`"name":"org1group1"`,
+				`"name":"org1group2"`,
+				`"totalItems":2`},
 			NotExpectedContent: []string{`"name":"org2group1"`},
 			ExpectedEvents:     map[string]int{OnRecordsListRequest: 1},
 			TestAppFactory:     generateTestApp,
@@ -174,7 +177,14 @@ func TestOrgs(t *testing.T) {
 			Url:            fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
 			RequestHeaders: org1AdminHeader,
 			ExpectedStatus: 204,
-			ExpectedEvents: map[string]int{OnModelAfterDelete: 2, OnModelAfterUpdate: 1, OnModelBeforeDelete: 2, OnModelBeforeUpdate: 1, OnRecordAfterDeleteRequest: 1, OnRecordBeforeDeleteRequest: 1},
+			ExpectedEvents: map[string]int{
+				OnModelAfterDelete:          4,
+				OnModelAfterUpdate:          1,
+				OnModelBeforeDelete:         4,
+				OnModelBeforeUpdate:         1,
+				OnRecordAfterDeleteRequest:  1,
+				OnRecordBeforeDeleteRequest: 1,
+			},
 			TestAppFactory: generateTestApp,
 		},
 		{

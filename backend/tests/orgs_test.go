@@ -9,7 +9,7 @@ import (
 	"github.com/pocketbase/pocketbase/tests"
 )
 
-func TestGroups(t *testing.T) {
+func TestOrgs(t *testing.T) {
 	app := generateTestApp(t)
 
 	org1AdminHeader, err := generateAuthHeader(app, "users", "org1Admin")

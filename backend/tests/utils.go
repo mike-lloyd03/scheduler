@@ -8,10 +8,11 @@ import (
 )
 
 type AuthHeaders struct {
-	Org1Admin        map[string]string
-	Org1Group1Admin  map[string]string
-	Org1Member       map[string]string
-	Org1Group1Member map[string]string
+	Org1Admin         map[string]string
+	Org1Group1Admin   map[string]string
+	Org1Member        map[string]string
+	Org1Group1Manager map[string]string
+	Org1Group1Member  map[string]string
 }
 
 func (a *AuthHeaders) Init(app *tests.TestApp) error {

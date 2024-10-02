@@ -9,18 +9,11 @@ import (
 	"github.com/pocketbase/pocketbase/tests"
 )
 
+// Org Admin can list, view, update own orgs
+// Group admin can list, view own orgs
+// Group member can list, view own orgs
 func TestOrgs(t *testing.T) {
 	app := generateTestApp(t)
-
-	org1AdminHeader, err := generateAuthHeader(app, "users", "org1Admin")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	org1MemberHeader, err := generateAuthHeader(app, "users", "org1Member")
-	if err != nil {
-		t.Fatal(err)
-	}
 
 	org1, err := app.Dao().FindFirstRecordByFilter("orgs", "name='org1'")
 	if err != nil {
@@ -86,7 +79,7 @@ func TestOrgs(t *testing.T) {
 			Name:               "org admins can list own orgs",
 			Method:             http.MethodGet,
 			Url:                "/api/collections/orgs/records",
-			RequestHeaders:     org1AdminHeader,
+			RequestHeaders:     authHeaders.Org1Admin,
 			ExpectedStatus:     200,
 			ExpectedContent:    []string{`"name":"org1"`, `"totalItems":1`},
 			NotExpectedContent: []string{`"name":"org2"`},
@@ -97,7 +90,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org admin can view own org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"org1"`},
 			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
@@ -107,7 +100,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org admin cannot view other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org2.Id),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -117,7 +110,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/orgs/records",
 			Body:            strings.NewReader(`{"name": "newOrg"}`),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  403,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -127,7 +120,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"updatedOrg"`},
 			ExpectedEvents:  map[string]int{OnModelAfterUpdate: 1, OnModelBeforeUpdate: 1, OnRecordAfterUpdateRequest: 1, OnRecordBeforeUpdateRequest: 1},
@@ -138,7 +131,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org2.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -147,7 +140,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org admin cannot delete own org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  403,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -156,7 +149,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org admin cannot delete other org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org2.Id),
-			RequestHeaders:  org1AdminHeader,
+			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  403,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -169,7 +162,7 @@ func TestOrgs(t *testing.T) {
 			Name:               "org member can list own orgs",
 			Method:             http.MethodGet,
 			Url:                "/api/collections/orgs/records",
-			RequestHeaders:     org1MemberHeader,
+			RequestHeaders:     authHeaders.Org1Member,
 			ExpectedStatus:     200,
 			ExpectedContent:    []string{`"name":"org1"`, `"totalItems":1`},
 			NotExpectedContent: []string{`"name":"org2"`},
@@ -180,7 +173,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org member can view own org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"org1"`},
 			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
@@ -190,7 +183,7 @@ func TestOrgs(t *testing.T) {
 			Name:            "org member cannot view other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org2.Id),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -200,7 +193,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/orgs/records",
 			Body:            strings.NewReader(`{"name": "newOrg"}`),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  403,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -210,7 +203,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -220,7 +213,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org2.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -230,7 +223,7 @@ func TestOrgs(t *testing.T) {
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/orgs/records/%s", org1.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
-			RequestHeaders:  org1MemberHeader,
+			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  403,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,

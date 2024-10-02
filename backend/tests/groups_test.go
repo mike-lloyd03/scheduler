@@ -158,9 +158,9 @@ func TestGroups(t *testing.T) {
 			RequestHeaders: authHeaders.Org1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          4,
+				OnModelAfterDelete:          6,
 				OnModelAfterUpdate:          2,
-				OnModelBeforeDelete:         4,
+				OnModelBeforeDelete:         6,
 				OnModelBeforeUpdate:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,

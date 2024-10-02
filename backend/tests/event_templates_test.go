@@ -184,8 +184,8 @@ func TestEventTemplates(t *testing.T) {
 			RequestHeaders: authHeaders.Org1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          1,
-				OnModelBeforeDelete:         1,
+				OnModelAfterDelete:          2,
+				OnModelBeforeDelete:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
 			},
@@ -292,8 +292,8 @@ func TestEventTemplates(t *testing.T) {
 			RequestHeaders: authHeaders.Org1Group1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          1,
-				OnModelBeforeDelete:         1,
+				OnModelAfterDelete:          2,
+				OnModelBeforeDelete:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
 			},
@@ -367,7 +367,7 @@ func TestEventTemplates(t *testing.T) {
 			TestAppFactory:  generateTestApp,
 		},
 		{
-			Name:            "group members cannot create group",
+			Name:            "group members cannot create event_templates",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/event_templates/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newET", "recurrence": "daily", "group":"%s"}`, org1group1.Id)),
@@ -387,7 +387,7 @@ func TestEventTemplates(t *testing.T) {
 			TestAppFactory:  generateTestApp,
 		},
 		{
-			Name:            "group members cannot delete an org",
+			Name:            "group members cannot delete an event_template",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", org1group1.Id),
 			RequestHeaders:  authHeaders.Org1Group1Member,

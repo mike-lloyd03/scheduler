@@ -22,4 +22,5 @@ const (
 
 var (
 	authHeaders AuthHeaders
+	testData    TestData
 )

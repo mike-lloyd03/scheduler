@@ -1,8 +1,10 @@
 package tests
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/pocketbase/pocketbase/models"
 	"github.com/pocketbase/pocketbase/tests"
 	"github.com/pocketbase/pocketbase/tokens"
 )
@@ -34,6 +36,80 @@ func (a *AuthHeaders) Init(app *tests.TestApp) error {
 	}
 
 	a.Org1Group1Member, err = generateAuthHeader(app, "users", "org1group1Member")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type TestData struct {
+	org1                  *models.Record
+	org2                  *models.Record
+	org1group1            *models.Record
+	org2group1            *models.Record
+	o1g1et1               *models.Record
+	o1g2et1               *models.Record
+	o2g1et1               *models.Record
+	o1g1e1                *models.Record
+	o1g2e1                *models.Record
+	o2g1e1                *models.Record
+	onDeleteGroup         int
+	onDeleteEventTemplate int
+}
+
+func (d *TestData) Init(app *tests.TestApp) error {
+	var err error
+
+	d.onDeleteGroup = 7
+	d.onDeleteEventTemplate = 3
+
+	d.org1, err = app.Dao().FindFirstRecordByFilter("orgs", "name='org1'")
+	if err != nil {
+		return err
+	}
+
+	d.org2, err = app.Dao().FindFirstRecordByFilter("orgs", "name='org2'")
+	if err != nil {
+		return err
+	}
+
+	d.org1group1, err = app.Dao().FindFirstRecordByFilter("groups", "name='org1group1'")
+	if err != nil {
+		return err
+	}
+
+	d.org2group1, err = app.Dao().FindFirstRecordByFilter("groups", "name='org2group1'")
+	if err != nil {
+		return err
+	}
+
+	d.o1g1et1, err = app.Dao().FindFirstRecordByFilter("event_templates", "name='o1g1et1'")
+	if err != nil {
+		return err
+	}
+
+	d.o1g2et1, err = app.Dao().FindFirstRecordByFilter("event_templates", "name='o1g2et1'")
+	if err != nil {
+		return err
+	}
+
+	d.o2g1et1, err = app.Dao().FindFirstRecordByFilter("event_templates", "name='o2g1et1'")
+	if err != nil {
+		return err
+	}
+
+	d.o1g1e1, err = app.Dao().FindFirstRecordByFilter("events", fmt.Sprintf("event_template='%s'", d.o1g1et1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.o1g2e1, err = app.Dao().FindFirstRecordByFilter("events", fmt.Sprintf("event_template='%s'", d.o1g2et1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.o2g1e1, err = app.Dao().FindFirstRecordByFilter("events", fmt.Sprintf("event_template='%s'", d.o2g1et1.Id))
 	if err != nil {
 		return err
 	}

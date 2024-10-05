@@ -14,26 +14,8 @@ import (
 // Group member can list, view own groups
 func TestGroups(t *testing.T) {
 	app := generateTestApp(t)
-
-	org1, err := app.Dao().FindFirstRecordByFilter("orgs", "name='org1'")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	org2, err := app.Dao().FindFirstRecordByFilter("orgs", "name='org2'")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	org1group1, err := app.Dao().FindFirstRecordByFilter("groups", "name='org1group1'")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	org2group1, err := app.Dao().FindFirstRecordByFilter("groups", "name='org2group1'")
-	if err != nil {
-		t.Fatal(err)
-	}
+	authHeaders.Init(app)
+	testData.Init(app)
 
 	scenarios := []tests.ApiScenario{
 		// -----------
@@ -51,7 +33,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "unauth cannot view group",
 			Method:          http.MethodGet,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -60,7 +42,7 @@ func TestGroups(t *testing.T) {
 			Name:            "unauth cannot create group",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org1.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org1.Id)),
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -68,7 +50,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "unauth cannot update group",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
@@ -77,7 +59,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "unauth cannot delete group",
 			Method:          http.MethodDelete,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -102,7 +84,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "org admin can view own org's groups",
 			Method:          http.MethodGet,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"org1group1"`},
@@ -113,7 +95,7 @@ func TestGroups(t *testing.T) {
 			Name:            "org admin can create group in own org",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org1.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org1.Id)),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"newOrg"`},
@@ -124,7 +106,7 @@ func TestGroups(t *testing.T) {
 			Name:            "org admin cannot create group in other org",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org2.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org2.Id)),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
@@ -133,7 +115,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "org admin can update own org's groups",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  200,
@@ -144,7 +126,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "org admin cannot update other org's groups",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org2group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org2group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  404,
@@ -154,13 +136,13 @@ func TestGroups(t *testing.T) {
 		{
 			Name:           "org admin can delete own org's groups",
 			Method:         http.MethodDelete,
-			Url:            fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:            fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			RequestHeaders: authHeaders.Org1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          6,
+				OnModelAfterDelete:          testData.onDeleteGroup,
+				OnModelBeforeDelete:         testData.onDeleteGroup,
 				OnModelAfterUpdate:          2,
-				OnModelBeforeDelete:         6,
 				OnModelBeforeUpdate:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
@@ -170,7 +152,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "org admin cannot delete other org's groups",
 			Method:          http.MethodDelete,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org2group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org2group1.Id),
 			RequestHeaders:  authHeaders.Org1Admin,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
@@ -193,7 +175,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group admins can view own group",
 			Method:          http.MethodGet,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			RequestHeaders:  authHeaders.Org1Group1Admin,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"org1group1"`},
@@ -204,7 +186,7 @@ func TestGroups(t *testing.T) {
 			Name:            "group admin cannot create group",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org2.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org2.Id)),
 			RequestHeaders:  authHeaders.Org1Group1Admin,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
@@ -213,7 +195,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group admin can update own groups",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			RequestHeaders:  authHeaders.Org1Group1Admin,
 			ExpectedStatus:  200,
@@ -224,7 +206,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group admin cannot delete own groups",
 			Method:          http.MethodDelete,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			RequestHeaders:  authHeaders.Org1Group1Admin,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
@@ -237,7 +219,7 @@ func TestGroups(t *testing.T) {
 			Name:            "org member cannot create org",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org1.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org1.Id)),
 			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
@@ -246,7 +228,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "org members cannot delete an org",
 			Method:          http.MethodDelete,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedOrg"}`),
 			RequestHeaders:  authHeaders.Org1Member,
 			ExpectedStatus:  404,
@@ -270,7 +252,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group member can view own group",
 			Method:          http.MethodGet,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			RequestHeaders:  authHeaders.Org1Group1Member,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"org1group1"`},
@@ -281,7 +263,7 @@ func TestGroups(t *testing.T) {
 			Name:            "group members cannot create group",
 			Method:          http.MethodPost,
 			Url:             "/api/collections/groups/records",
-			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, org1.Id)),
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newOrg", "org":"%s"}`, testData.org1.Id)),
 			RequestHeaders:  authHeaders.Org1Group1Member,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
@@ -290,7 +272,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group members cannot update own group",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org1group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org1group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			RequestHeaders:  authHeaders.Org1Group1Member,
 			ExpectedStatus:  404,
@@ -300,7 +282,7 @@ func TestGroups(t *testing.T) {
 		{
 			Name:            "group member cannot update other group",
 			Method:          http.MethodPatch,
-			Url:             fmt.Sprintf("/api/collections/groups/records/%s", org2group1.Id),
+			Url:             fmt.Sprintf("/api/collections/groups/records/%s", testData.org2group1.Id),
 			Body:            strings.NewReader(`{"name": "updatedGroup"}`),
 			RequestHeaders:  authHeaders.Org1Group1Member,
 			ExpectedStatus:  404,

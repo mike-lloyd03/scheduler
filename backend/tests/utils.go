@@ -54,6 +54,9 @@ type TestData struct {
 	o1g1e1                *models.Record
 	o1g2e1                *models.Record
 	o2g1e1                *models.Record
+	o1g1et1rt1            *models.Record
+	o1g2et1rt1            *models.Record
+	o2g1et1rt1            *models.Record
 	onDeleteGroup         int
 	onDeleteEventTemplate int
 }
@@ -110,6 +113,21 @@ func (d *TestData) Init(app *tests.TestApp) error {
 	}
 
 	d.o2g1e1, err = app.Dao().FindFirstRecordByFilter("events", fmt.Sprintf("event_template='%s'", d.o2g1et1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.o1g1et1rt1, err = app.Dao().FindFirstRecordByFilter("role_templates", "name='o1g1et1rt1'")
+	if err != nil {
+		return err
+	}
+
+	d.o1g2et1rt1, err = app.Dao().FindFirstRecordByFilter("role_templates", "name='o1g2et1rt1'")
+	if err != nil {
+		return err
+	}
+
+	d.o2g1et1rt1, err = app.Dao().FindFirstRecordByFilter("role_templates", "name='o2g1et1rt1'")
 	if err != nil {
 		return err
 	}

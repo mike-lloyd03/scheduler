@@ -85,7 +85,7 @@ export type User = {
     verified: false;
     emailVisibility: true;
     email: string;
-    name: string;
+    name?: string;
     role: string;
     orgs: string[];
     groups: string[];
@@ -95,3 +95,5 @@ export type User = {
     updated: string;
     expand?: { orgs?: Org[]; groups?: Group[] };
 };
+
+export type OptionType = { value: string | null; label: string }[];

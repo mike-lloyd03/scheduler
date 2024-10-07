@@ -8,7 +8,7 @@
     export let data: LayoutData;
 
     $: items = data.users.map((user) => {
-        return { id: user.id, name: user.name };
+        return { id: user.id, name: user.name != "" ? user.name : user.username };
     });
 </script>
 

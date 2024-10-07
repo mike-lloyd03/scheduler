@@ -3,3 +3,6 @@ run:
 
 run_test:
     go run main.go serve --dir="./test_pb_data"
+
+run_test_migrations:
+    go run main.go migrate collections --dir="./test_pb_data"

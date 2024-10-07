@@ -1,0 +1,5 @@
+#!/bin/sh
+
+/backend/backend serve --http=0.0.0.0:8090 &
+
+node /frontend/build

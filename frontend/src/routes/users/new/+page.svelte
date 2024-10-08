@@ -22,6 +22,13 @@
     <form id="form" method="POST" use:enhance={submit}>
         <div class="py-4">
             <p>
+                <span class="font-bold">Username:</span>
+                <input class="input inline" type="text" name="username" required />
+            </p>
+        </div>
+
+        <div class="py-4">
+            <p>
                 <span class="font-bold">Name:</span>
                 <input class="input inline" type="text" name="name" required />
             </p>

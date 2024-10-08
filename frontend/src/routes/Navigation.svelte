@@ -22,7 +22,7 @@
     <div class="grow"></div>
     <hr />
     <div class="mt-2">
-        <a href="/users/{user.id}">{user.name}</a>
+        <a href="/users/{user.id}">{user.name != "" ? user.name : user.username}</a>
         <form method="POST" action="/logout">
             <button>Logout</button>
         </form>

@@ -4,9 +4,17 @@ import type { Group, Org, User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-    const user = await locals.pb
-        .collection("users")
-        .getOne<User>(params.userID, { expand: "orgs,groups" });
+    let user: User;
+
+    if (params.userID == "last") {
+        user = await locals.pb
+            .collection("users")
+            .getFirstListItem<User>("", { sort: "-created", perPage: 1 });
+    } else {
+        user = await locals.pb
+            .collection("users")
+            .getOne<User>(params.userID, { expand: "orgs,groups" });
+    }
 
     const orgs = await locals.pb.collection("orgs").getFullList<Org>({ sort: "name" });
     const groups = await locals.pb.collection("groups").getFullList<Group>({ sort: "name" });

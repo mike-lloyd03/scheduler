@@ -12,7 +12,51 @@ import (
 func TestRoleTemplatesUnauth(t *testing.T) {
 	initTest(t)
 
-	scenarios := []tests.ApiScenario{}
+	scenarios := []tests.ApiScenario{
+		{
+			Name:            "unauth cannot list role templates",
+			Method:          http.MethodGet,
+			Url:             "/api/collections/role_templates/records",
+			ExpectedStatus:  200,
+			ExpectedContent: []string{"\"items\":[]"},
+			ExpectedEvents:  map[string]int{OnRecordsListRequest: 1},
+			TestAppFactory:  generateTestApp,
+		},
+		{
+			Name:            "unauth cannot view role templates",
+			Method:          http.MethodGet,
+			Url:             fmt.Sprintf("/api/collections/role_templates/records/%s", testData.o1g1et1rt1.Id),
+			ExpectedStatus:  404,
+			ExpectedContent: []string{`"data":{}`},
+			TestAppFactory:  generateTestApp,
+		},
+		{
+			Name:            "unauth cannot create role templates",
+			Method:          http.MethodPost,
+			Url:             "/api/collections/role_templates/records",
+			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newRole", "event_template":"%s"}`, testData.o1g1et1.Id)),
+			ExpectedStatus:  400,
+			ExpectedContent: []string{`"data":{}`},
+			TestAppFactory:  generateTestApp,
+		},
+		{
+			Name:            "unauth cannot update role templates",
+			Method:          http.MethodPatch,
+			Url:             fmt.Sprintf("/api/collections/role_templates/records/%s", testData.o1g1et1rt1.Id),
+			Body:            strings.NewReader(`{"name": "updatedRole"}`),
+			ExpectedStatus:  404,
+			ExpectedContent: []string{`"data":{}`},
+			TestAppFactory:  generateTestApp,
+		},
+		{
+			Name:            "unauth cannot delete role templates",
+			Method:          http.MethodDelete,
+			Url:             fmt.Sprintf("/api/collections/role_templates/records/%s", testData.o1g1et1rt1.Id),
+			ExpectedStatus:  404,
+			ExpectedContent: []string{`"data":{}`},
+			TestAppFactory:  generateTestApp,
+		},
+	}
 
 	for _, scenario := range scenarios {
 		scenario.Test(t)

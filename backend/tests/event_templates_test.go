@@ -9,25 +9,10 @@ import (
 	"github.com/pocketbase/pocketbase/tests"
 )
 
-// Org Admin can list, view, create, update, delete event_templates in all groups own org
-// Group admin can list, view, create, update, delete event_templates in own group
-// Group manager can list, view, create, update, delete event_templates in own group
-// Group member can list, view event_templates in own group
-func TestEventTemplates(t *testing.T) {
-	app := generateTestApp(t)
-	err := authHeaders.Init(app)
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = testData.Init(app)
-	if err != nil {
-		t.Fatal(err)
-	}
+func TestEventTemplatesUnauth(t *testing.T) {
+	initTest(t)
 
 	scenarios := []tests.ApiScenario{
-		// -----------
-		// unauth
-		// -----------
 		{
 			Name:            "unauth cannot list event templates",
 			Method:          http.MethodGet,
@@ -71,14 +56,23 @@ func TestEventTemplates(t *testing.T) {
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// org admin
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestEventTemplatesOrgAdmin(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Admin
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "org admins can list own org's event_templates",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/event_templates/records",
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				`"name":"o1g1et1"`,
@@ -95,7 +89,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "org admin can view own org's event_templates",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"o1g1et1"`},
 			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
@@ -106,7 +100,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/event_templates/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newET", "recurrence": "daily", "group":"%s"}`, testData.org1group1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"newET"`},
 			ExpectedEvents: map[string]int{
@@ -122,7 +116,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/event_templates/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newET", "recurrence": "daily", "group":"%s"}`, testData.org2group1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -132,7 +126,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"updatedET"`},
 			ExpectedEvents:  map[string]int{OnModelAfterUpdate: 1, OnModelBeforeUpdate: 1, OnRecordAfterUpdateRequest: 1, OnRecordBeforeUpdateRequest: 1},
@@ -143,7 +137,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"updatedET"`},
 			ExpectedEvents:  map[string]int{OnModelAfterUpdate: 1, OnModelBeforeUpdate: 1, OnRecordAfterUpdateRequest: 1, OnRecordBeforeUpdateRequest: 1},
@@ -154,7 +148,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -163,7 +157,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:           "org admin can delete event_template in group in own org",
 			Method:         http.MethodDelete,
 			Url:            fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
 				OnModelAfterDelete:          testData.onDeleteEventTemplate,
@@ -177,19 +171,28 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "org admin cannot delete event_templates in groups in other org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// group admin
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestEventTemplatesGroupAdmin(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Group1Admin
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "group admins can list event_templates in own group",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/event_templates/records",
-			RequestHeaders: authHeaders.Org1Group1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				`"name":"o1g1et1"`,
@@ -207,7 +210,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group admins can view event_templates in own group",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"o1g1et1"`},
 			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
@@ -217,7 +220,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group admins cannot view event_templates in other group in same org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -226,7 +229,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group admins cannot view event_templates in other group in other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -236,7 +239,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"updatedET"`},
 			ExpectedEvents: map[string]int{
@@ -252,7 +255,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -262,7 +265,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -271,7 +274,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:           "group admin can delete event_templates in own group",
 			Method:         http.MethodDelete,
 			Url:            fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
-			RequestHeaders: authHeaders.Org1Group1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
 				OnModelAfterDelete:          testData.onDeleteEventTemplate,
@@ -285,7 +288,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group admin cannot delete event_templates in other group in same org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -294,19 +297,28 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group admin cannot delete event_templates in other group in other org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// group member
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestEventTemplatesGroupMember(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Group1Member
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "group member can list event_templates in own group",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/event_templates/records",
-			RequestHeaders: authHeaders.Org1Group1Member,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				`"name":"o1g1et1"`,
@@ -324,7 +336,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group members can view event_templates in own group",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{`"name":"o1g1et1"`},
 			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
@@ -334,7 +346,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group members cannot view event_templates in other group in same org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -343,7 +355,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group members cannot view event_templates in other group in other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o2g1et1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -353,7 +365,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/event_templates/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"name": "newET", "recurrence": "daily", "group":"%s"}`, testData.org1group1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -363,7 +375,7 @@ func TestEventTemplates(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.o1g2et1.Id),
 			Body:            strings.NewReader(`{"name": "updatedET"}`),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -372,7 +384,7 @@ func TestEventTemplates(t *testing.T) {
 			Name:            "group members cannot delete an event_template",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/event_templates/records/%s", testData.org1group1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,

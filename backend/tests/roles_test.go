@@ -9,18 +9,6 @@ import (
 	"github.com/pocketbase/pocketbase/tests"
 )
 
-func initTest(t *testing.T) {
-	app := generateTestApp(t)
-	err := authHeaders.Init(app)
-	if err != nil {
-		t.Fatal(err)
-	}
-	err = testData.Init(app)
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestRolesUnauth(t *testing.T) {
 	initTest(t)
 
@@ -31,7 +19,7 @@ func TestRolesUnauth(t *testing.T) {
 			Method:          http.MethodGet,
 			Url:             "/api/collections/roles/records",
 			ExpectedStatus:  200,
-			ExpectedContent: []string{"\"items\":[]"},
+			ExpectedContent: []string{`"items":[]`},
 			ExpectedEvents:  map[string]int{OnRecordsListRequest: 1},
 			TestAppFactory:  generateTestApp,
 		},

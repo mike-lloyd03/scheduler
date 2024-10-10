@@ -196,3 +196,15 @@ func generateAuthHeader(app *tests.TestApp, collectionNameOrId string, username 
 
 	return header, nil
 }
+
+func initTest(t *testing.T) {
+	app := generateTestApp(t)
+	err := authHeaders.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = testData.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

@@ -15,8 +15,14 @@ import (
 // Group member can list, view event_templates in own group
 func TestEventTemplates(t *testing.T) {
 	app := generateTestApp(t)
-	authHeaders.Init(app)
-	testData.Init(app)
+	err := authHeaders.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = testData.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	scenarios := []tests.ApiScenario{
 		// -----------

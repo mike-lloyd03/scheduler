@@ -6,3 +6,9 @@ run_test:
 
 run_test_migrations:
     go run main.go migrate collections --dir="./test_pb_data"
+
+snapshot:
+    go run main.go migrate collections
+
+test:
+    go test ./...

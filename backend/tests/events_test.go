@@ -15,8 +15,14 @@ import (
 // Group member can list, view own events
 func TestEvents(t *testing.T) {
 	app := generateTestApp(t)
-	authHeaders.Init(app)
-	testData.Init(app)
+	err := authHeaders.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = testData.Init(app)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	scenarios := []tests.ApiScenario{
 		// -----------
@@ -172,8 +178,8 @@ func TestEvents(t *testing.T) {
 			RequestHeaders: authHeaders.Org1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          1,
-				OnModelBeforeDelete:         1,
+				OnModelAfterDelete:          2,
+				OnModelBeforeDelete:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
 			},
@@ -298,8 +304,8 @@ func TestEvents(t *testing.T) {
 			RequestHeaders: authHeaders.Org1Group1Admin,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
-				OnModelAfterDelete:          1,
-				OnModelBeforeDelete:         1,
+				OnModelAfterDelete:          2,
+				OnModelBeforeDelete:         2,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
 			},

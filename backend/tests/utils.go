@@ -57,15 +57,20 @@ type TestData struct {
 	o1g1et1rt1            *models.Record
 	o1g2et1rt1            *models.Record
 	o2g1et1rt1            *models.Record
+	o1g1e1r1              *models.Record
+	o1g2e1r1              *models.Record
+	o2g1e1r1              *models.Record
 	onDeleteGroup         int
 	onDeleteEventTemplate int
+	onDeleteRoleTemplate  int
 }
 
 func (d *TestData) Init(app *tests.TestApp) error {
 	var err error
 
-	d.onDeleteGroup = 7
-	d.onDeleteEventTemplate = 3
+	d.onDeleteGroup = 8
+	d.onDeleteEventTemplate = 4
+	d.onDeleteRoleTemplate = 2
 
 	d.org1, err = app.Dao().FindFirstRecordByFilter("orgs", "name='org1'")
 	if err != nil {
@@ -128,6 +133,21 @@ func (d *TestData) Init(app *tests.TestApp) error {
 	}
 
 	d.o2g1et1rt1, err = app.Dao().FindFirstRecordByFilter("role_templates", "name='o2g1et1rt1'")
+	if err != nil {
+		return err
+	}
+
+	d.o1g1e1r1, err = app.Dao().FindFirstRecordByFilter("roles", fmt.Sprintf("event='%s'", d.o1g1e1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.o1g2e1r1, err = app.Dao().FindFirstRecordByFilter("roles", fmt.Sprintf("event='%s'", d.o1g2e1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.o2g1e1r1, err = app.Dao().FindFirstRecordByFilter("roles", fmt.Sprintf("event='%s'", d.o2g1e1.Id))
 	if err != nil {
 		return err
 	}

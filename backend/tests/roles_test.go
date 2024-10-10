@@ -9,11 +9,7 @@ import (
 	"github.com/pocketbase/pocketbase/tests"
 )
 
-// Org Admin can list, view, create, update, delete roles in all groups in own org
-// Group admin can list, view, create, update, delete roles in own group
-// Group manager can list, view, create, update, delete roles in own group
-// Group member can list, view roles in own group
-func TestRoles(t *testing.T) {
+func initTest(t *testing.T) {
 	app := generateTestApp(t)
 	err := authHeaders.Init(app)
 	if err != nil {
@@ -23,11 +19,13 @@ func TestRoles(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestRolesUnauth(t *testing.T) {
+	initTest(t)
 
 	scenarios := []tests.ApiScenario{
-		// -----------
-		// unauth
-		// -----------
+
 		{
 			Name:            "unauth cannot list roles",
 			Method:          http.MethodGet,
@@ -71,14 +69,23 @@ func TestRoles(t *testing.T) {
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// org admin
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestRolesOrgAdmin(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Admin
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "org admins can list own org's roles",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/roles/records",
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -98,7 +105,7 @@ func TestRoles(t *testing.T) {
 			Name:           "org admin can view own org's roles",
 			Method:         http.MethodGet,
 			Url:            fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -112,7 +119,7 @@ func TestRoles(t *testing.T) {
 			Method:         http.MethodPost,
 			Url:            "/api/collections/roles/records",
 			Body:           strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o1g1et1rt1.Id, testData.o1g1e1.Id)),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"role_template":"%s"`, testData.o1g1et1rt1.Id),
@@ -131,7 +138,7 @@ func TestRoles(t *testing.T) {
 			Method:         http.MethodPost,
 			Url:            "/api/collections/roles/records",
 			Body:           strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o1g2et1rt1.Id, testData.o1g2e1.Id)),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"role_template":"%s"`, testData.o1g2et1rt1.Id),
@@ -150,7 +157,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/roles/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o2g1et1rt1.Id, testData.o2g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -160,7 +167,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g2e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{fmt.Sprintf(`"event":"%s"`, testData.o1g2e1.Id)},
 			ExpectedEvents: map[string]int{
@@ -176,7 +183,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g2e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id)},
 			ExpectedEvents: map[string]int{
@@ -192,7 +199,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -201,7 +208,7 @@ func TestRoles(t *testing.T) {
 			Name:           "org admin can delete role in group in own org",
 			Method:         http.MethodDelete,
 			Url:            fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
 				OnModelAfterDelete:          1,
@@ -215,19 +222,28 @@ func TestRoles(t *testing.T) {
 			Name:            "org admin cannot delete role in groups in other org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1.Id),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// group admin
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestRolesGroupAdmin(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Group1Admin
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "group admins can list roles in own group",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/roles/records",
-			RequestHeaders: authHeaders.Org1Group1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -247,7 +263,7 @@ func TestRoles(t *testing.T) {
 			Name:           "group admins can view roles in own group",
 			Method:         http.MethodGet,
 			Url:            fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders: authHeaders.Org1Group1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -260,7 +276,7 @@ func TestRoles(t *testing.T) {
 			Name:            "group admins cannot view roles in other group in same org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g2e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -269,7 +285,7 @@ func TestRoles(t *testing.T) {
 			Name:            "group admins cannot view roles in other group in other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -279,7 +295,7 @@ func TestRoles(t *testing.T) {
 			Method:         http.MethodPost,
 			Url:            "/api/collections/roles/records",
 			Body:           strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o1g1et1rt1.Id, testData.o1g1e1.Id)),
-			RequestHeaders: authHeaders.Org1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"role_template":"%s"`, testData.o1g1et1rt1.Id),
@@ -298,7 +314,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/roles/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o1g2et1rt1.Id, testData.o2g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -308,7 +324,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/roles/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"role_template":"%s",  "event":"%s"}`, testData.o2g1et1rt1.Id, testData.o2g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -318,7 +334,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g2e1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  200,
 			ExpectedContent: []string{fmt.Sprintf(`"event":"%s"`, testData.o1g2e1.Id)},
 			ExpectedEvents: map[string]int{
@@ -334,7 +350,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g2e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -344,7 +360,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -353,7 +369,7 @@ func TestRoles(t *testing.T) {
 			Name:           "group admin can delete roles in own group",
 			Method:         http.MethodDelete,
 			Url:            fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders: authHeaders.Org1Group1Admin,
+			RequestHeaders: auth,
 			ExpectedStatus: 204,
 			ExpectedEvents: map[string]int{
 				OnModelAfterDelete:          1,
@@ -367,7 +383,7 @@ func TestRoles(t *testing.T) {
 			Name:            "group admin cannot delete roles in other group in same org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g2e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -376,19 +392,28 @@ func TestRoles(t *testing.T) {
 			Name:            "group admin cannot delete roles in other group in other org",
 			Method:          http.MethodDelete,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Admin,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
 		},
-		// -----------
-		// group member
-		// -----------
+	}
+
+	for _, scenario := range scenarios {
+		scenario.Test(t)
+	}
+}
+
+func TestRolesGroupMember(t *testing.T) {
+	initTest(t)
+	auth := authHeaders.Org1Group1Member
+
+	scenarios := []tests.ApiScenario{
 		{
 			Name:           "group member can list roles in own group",
 			Method:         http.MethodGet,
 			Url:            "/api/collections/roles/records",
-			RequestHeaders: authHeaders.Org1Group1Member,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -408,7 +433,7 @@ func TestRoles(t *testing.T) {
 			Name:           "group members can view roles in own group",
 			Method:         http.MethodGet,
 			Url:            fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders: authHeaders.Org1Group1Member,
+			RequestHeaders: auth,
 			ExpectedStatus: 200,
 			ExpectedContent: []string{
 				fmt.Sprintf(`"event":"%s"`, testData.o1g1e1.Id),
@@ -421,7 +446,7 @@ func TestRoles(t *testing.T) {
 			Name:            "group members cannot view roles in other group in same org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g2e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -430,7 +455,7 @@ func TestRoles(t *testing.T) {
 			Name:            "group members cannot view roles in other group in other org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o2g1e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -440,7 +465,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPost,
 			Url:             "/api/collections/roles/records",
 			Body:            strings.NewReader(fmt.Sprintf(`{"role_template": "%s", "event":"%s"}`, testData.o1g1et1rt1.Id, testData.o1g1e1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  400,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -450,7 +475,7 @@ func TestRoles(t *testing.T) {
 			Method:          http.MethodPatch,
 			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
 			Body:            strings.NewReader(fmt.Sprintf(`{"event": "%s"}`, testData.o1g2e1.Id)),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,
@@ -458,8 +483,8 @@ func TestRoles(t *testing.T) {
 		{
 			Name:            "group members cannot delete a role",
 			Method:          http.MethodDelete,
-			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1e1r1.Id),
-			RequestHeaders:  authHeaders.Org1Group1Member,
+			Url:             fmt.Sprintf("/api/collections/roles/records/%s", testData.o1g1et1rt1.Id),
+			RequestHeaders:  auth,
 			ExpectedStatus:  404,
 			ExpectedContent: []string{`"data":{}`},
 			TestAppFactory:  generateTestApp,

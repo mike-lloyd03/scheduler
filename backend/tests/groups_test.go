@@ -143,8 +143,8 @@ func TestGroupsOrgAdmin(t *testing.T) {
 			ExpectedEvents: map[string]int{
 				OnModelAfterDelete:          testData.onDeleteGroup,
 				OnModelBeforeDelete:         testData.onDeleteGroup,
-				OnModelAfterUpdate:          2,
-				OnModelBeforeUpdate:         2,
+				OnModelAfterUpdate:          4,
+				OnModelBeforeUpdate:         4,
 				OnRecordAfterDeleteRequest:  1,
 				OnRecordBeforeDeleteRequest: 1,
 			},

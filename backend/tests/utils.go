@@ -48,6 +48,9 @@ type TestData struct {
 	org2                  *models.Record
 	org1group1            *models.Record
 	org2group1            *models.Record
+	org1group1Member      *models.Record
+	org1group2Member      *models.Record
+	org2group1Member      *models.Record
 	o1g1et1               *models.Record
 	o1g2et1               *models.Record
 	o2g1et1               *models.Record
@@ -88,6 +91,21 @@ func (d *TestData) Init(app *tests.TestApp) error {
 	}
 
 	d.org2group1, err = app.Dao().FindFirstRecordByFilter("groups", "name='org2group1'")
+	if err != nil {
+		return err
+	}
+
+	d.org1group1Member, err = app.Dao().FindFirstRecordByFilter("users", "username='org1group1Member'")
+	if err != nil {
+		return err
+	}
+
+	d.org1group2Member, err = app.Dao().FindFirstRecordByFilter("users", "username='org1group2Member'")
+	if err != nil {
+		return err
+	}
+
+	d.org2group1Member, err = app.Dao().FindFirstRecordByFilter("users", "username='org2group1Member'")
 	if err != nil {
 		return err
 	}

@@ -13,7 +13,6 @@ func TestRolesUnauth(t *testing.T) {
 	initTest(t)
 
 	scenarios := []tests.ApiScenario{
-
 		{
 			Name:            "unauth cannot list roles",
 			Method:          http.MethodGet,

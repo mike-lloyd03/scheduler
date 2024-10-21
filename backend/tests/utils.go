@@ -44,28 +44,34 @@ func (a *AuthHeaders) Init(app *tests.TestApp) error {
 }
 
 type TestData struct {
-	org1                  *models.Record
-	org2                  *models.Record
-	org1group1            *models.Record
-	org2group1            *models.Record
-	org1group1Member      *models.Record
-	org1group2Member      *models.Record
-	org2group1Member      *models.Record
-	o1g1et1               *models.Record
-	o1g2et1               *models.Record
-	o2g1et1               *models.Record
-	o1g1e1                *models.Record
-	o1g2e1                *models.Record
-	o2g1e1                *models.Record
-	o1g1et1rt1            *models.Record
-	o1g2et1rt1            *models.Record
-	o2g1et1rt1            *models.Record
-	o1g1e1r1              *models.Record
-	o1g2e1r1              *models.Record
-	o2g1e1r1              *models.Record
-	onDeleteGroup         int
-	onDeleteEventTemplate int
-	onDeleteRoleTemplate  int
+	org1                      *models.Record
+	org2                      *models.Record
+	org1group1                *models.Record
+	org2group1                *models.Record
+	org1Admin                 *models.Record
+	org1group1Admin           *models.Record
+	org2group1Admin           *models.Record
+	org1group1Member          *models.Record
+	org1group2Member          *models.Record
+	org2group1Member          *models.Record
+	o1g1et1                   *models.Record
+	o1g2et1                   *models.Record
+	o2g1et1                   *models.Record
+	o1g1e1                    *models.Record
+	o1g2e1                    *models.Record
+	o2g1e1                    *models.Record
+	o1g1et1rt1                *models.Record
+	o1g2et1rt1                *models.Record
+	o2g1et1rt1                *models.Record
+	o1g1e1r1                  *models.Record
+	o1g2e1r1                  *models.Record
+	o2g1e1r1                  *models.Record
+	org1AdminPermission       *models.Record
+	org1group1AdminPermission *models.Record
+	org2group1AdminPermission *models.Record
+	onDeleteGroup             int
+	onDeleteEventTemplate     int
+	onDeleteRoleTemplate      int
 }
 
 func (d *TestData) Init(app *tests.TestApp) error {
@@ -91,6 +97,21 @@ func (d *TestData) Init(app *tests.TestApp) error {
 	}
 
 	d.org2group1, err = app.Dao().FindFirstRecordByFilter("groups", "name='org2group1'")
+	if err != nil {
+		return err
+	}
+
+	d.org1Admin, err = app.Dao().FindFirstRecordByFilter("users", "username='org1Admin'")
+	if err != nil {
+		return err
+	}
+
+	d.org1group1Admin, err = app.Dao().FindFirstRecordByFilter("users", "username='org1group1Admin'")
+	if err != nil {
+		return err
+	}
+
+	d.org2group1Admin, err = app.Dao().FindFirstRecordByFilter("users", "username='org2group1Admin'")
 	if err != nil {
 		return err
 	}
@@ -166,6 +187,21 @@ func (d *TestData) Init(app *tests.TestApp) error {
 	}
 
 	d.o2g1e1r1, err = app.Dao().FindFirstRecordByFilter("roles", fmt.Sprintf("event='%s'", d.o2g1e1.Id))
+	if err != nil {
+		return err
+	}
+
+	d.org1AdminPermission, err = app.Dao().FindFirstRecordByFilter("permissions", "user.username='org1Admin'")
+	if err != nil {
+		return err
+	}
+
+	d.org1group1AdminPermission, err = app.Dao().FindFirstRecordByFilter("permissions", "user.username='org1group1Admin'")
+	if err != nil {
+		return err
+	}
+
+	d.org2group1AdminPermission, err = app.Dao().FindFirstRecordByFilter("permissions", "user.username='org2group1Admin'")
 	if err != nil {
 		return err
 	}

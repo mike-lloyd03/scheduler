@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	_ "backend/migrations"
 	_ "backend/tests"
+
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -33,6 +35,36 @@ func main() {
 		// enable auto creation of migration files when making collection changes in the Admin UI
 		// (the isGoRun check is to enable it only during development)
 		Automigrate: isGoRun && enableAutomigrate,
+	})
+
+	app.OnRecordBeforeCreateRequest("permissions").Add(func(e *core.RecordCreateEvent) error {
+		org := e.Record.Get("org")
+		group := e.Record.Get("group")
+
+		if org == "" && group == "" {
+			return fmt.Errorf("An organization or group must be provided")
+		}
+
+		if org != "" && group != "" {
+			return fmt.Errorf("Either an organization or a group must be chosen, but not both")
+		}
+
+		return nil
+	})
+
+	app.OnRecordBeforeUpdateRequest("permissions").Add(func(e *core.RecordUpdateEvent) error {
+		org := e.Record.Get("org")
+		group := e.Record.Get("group")
+
+		if org == "" && group == "" {
+			return fmt.Errorf("An organization or group must be provided")
+		}
+
+		if org != "" && group != "" {
+			return fmt.Errorf("Either an organization or a group must be provided, but not both")
+		}
+
+		return nil
 	})
 
 	if err := app.Start(); err != nil {

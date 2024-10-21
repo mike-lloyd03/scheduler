@@ -6,6 +6,7 @@
     import { breadcrumbs } from "$lib/stores";
     import MultiSelectField from "$lib/fields/MultiSelectField.svelte";
     import type { Org, OptionType, Group } from "$lib/types";
+    import UpdatePassword from "./UpdatePassword.svelte";
 
     export let data: PageData;
 
@@ -35,7 +36,7 @@
     <div class="py-4">
         <p>
             <span class="font-bold">Name:</span>
-            <InputField name="name" value={data.user.name} {edit} form="updateForm" />
+            <InputField name="name" value={data.user.name || ""} {edit} form="updateForm" />
         </p>
 
         <p>
@@ -68,5 +69,9 @@
         <p><span class="font-bold">Created at:</span> {toLocaleDateTime(data.user.created)}</p>
 
         <p><span class="font-bold">Updated at:</span> {toLocaleDateTime(data.user.updated)}</p>
+    </div>
+
+    <div>
+        <UpdatePassword />
     </div>
 </ResourcePage>

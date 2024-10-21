@@ -65,7 +65,7 @@
 </script>
 
 {#if $modalStore[0]}
-    <div class="modal-example-form {cBase}">
+    <div class={cBase}>
         <header class={cHeader}>Schedule Event</header>
 
         <form class="modal-form {cForm}">

@@ -35,12 +35,12 @@
     <div class="py-4">
         <p>
             <span class="font-bold">Name:</span>
-            <InputField name="name" value={data.user.name} {edit} />
+            <InputField name="name" value={data.user.name} {edit} form="updateForm" />
         </p>
 
         <p>
             <span class="font-bold">Email:</span>
-            <InputField name="email" value={data.user.email} {edit} />
+            <InputField name="email" value={data.user.email} {edit} form="updateForm" />
         </p>
 
         <p>
@@ -50,6 +50,7 @@
                 value={orgsAsOptions(data.user.expand?.orgs || [])}
                 options={orgsAsOptions(data.orgs)}
                 {edit}
+                form="updateForm"
             />
         </p>
 
@@ -60,6 +61,7 @@
                 value={groupsAsOptions(data.user.expand?.groups || [])}
                 options={groupsAsOptions(data.groups)}
                 {edit}
+                form="updateForm"
             />
         </p>
 

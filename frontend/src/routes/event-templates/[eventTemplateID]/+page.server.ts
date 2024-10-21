@@ -30,7 +30,9 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         filter: `(role_template.event_template.id='${params.eventTemplateID}')`,
     });
 
-    return { eventTemplate, roleTemplates, events, roles };
+    const users = await locals.pb.collection("users").getFullList<Role>({ expand: "orgs,groups" });
+
+    return { eventTemplate, roleTemplates, events, roles, users };
 };
 
 export const actions: Actions = {

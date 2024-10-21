@@ -8,7 +8,7 @@
     const modalStore = getModalStore();
 
     const formData = {
-        event_template: "",
+        event_template: $modalStore[0].meta.selectedEventTemplateID || "",
         datetime: "",
         roles: "",
     };
@@ -53,12 +53,10 @@
         let eventRoles = {};
         selectedEventRoleTemplates?.forEach((rt) => (eventRoles[rt.id] = null));
         formData.roles = JSON.stringify(eventRoles);
-        console.log(JSON.stringify(eventRoles));
     }
 
     function updateCreateRolesValue() {
         formData.roles = JSON.stringify(createRoles);
-        console.log(formData.roles);
     }
 
     const cBase = "card p-4 w-modal shadow-xl space-y-4";

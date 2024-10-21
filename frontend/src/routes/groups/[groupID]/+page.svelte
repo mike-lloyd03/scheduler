@@ -21,7 +21,7 @@
 >
     <p>
         <span class="font-bold">Name:</span>
-        <InputField name="name" value={data.group.name} {edit} />
+        <InputField name="name" value={data.group.name} {edit} form="updateForm" />
     </p>
     <p><span class="font-bold">Organization:</span> {data.group.expand?.org.name}</p>
     <p><span class="font-bold">Created at:</span> {toLocaleDateTime(data.group.created)}</p>

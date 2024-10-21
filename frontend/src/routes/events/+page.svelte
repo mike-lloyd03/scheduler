@@ -1,63 +1,18 @@
 <script lang="ts">
     import EventsTable from "$lib/components/EventsTable.svelte";
     import type { PageData } from "./$types";
-    import { getModalStore } from "@skeletonlabs/skeleton";
-    import ScheduleEventForm from "./ScheduleEventForm.svelte";
-    import { enhance } from "$app/forms";
-    import type { SubmitFunction } from "@sveltejs/kit";
-    import { handleSubmit, modalComponentForm } from "$lib/utils";
-    import ModalButton from "$lib/components/ModalButton.svelte";
     import { breadcrumbs } from "$lib/stores";
-
-    const modalStore = getModalStore();
+    import ScheduleEvent from "$lib/components/ScheduleEvent.svelte";
 
     export let data: PageData;
 
     breadcrumbs.clear().add("Events", "events");
 
-    let createEventForm: HTMLFormElement;
-    let createEventFormData = {
-        event_template: "",
-        datetime: "",
-        roles: "",
-    };
-
-    function openModal(): void {
-        const meta = {
-            eventTemplates: data.eventTemplates,
-            roleTemplates: data.roleTemplates,
-            users: data.users,
-        };
-
-        modalComponentForm(
-            ScheduleEventForm,
-            createEventForm,
-            modalStore,
-            (r) => {
-                createEventFormData = r;
-            },
-            meta,
-        );
-    }
-
-    const submit: SubmitFunction = ({ action, formData }) => {
-        let successMsg = "Successful";
-
-        switch (action.search) {
-            case "?/createEvent":
-                formData.set("event_template", createEventFormData.event_template);
-                formData.set("datetime", createEventFormData.datetime);
-                formData.set("roles", createEventFormData.roles);
-                successMsg = "Event scheduled";
-                break;
-        }
-
-        return handleSubmit(successMsg);
-    };
+    const eventTemplates = data.eventTemplates;
+    const roleTemplates = data.roleTemplates;
+    const users = data.users;
 </script>
 
-<form bind:this={createEventForm} method="POST" action="?/createEvent" use:enhance={submit}></form>
-
-<ModalButton onClick={openModal} text="Schedule Event" />
+<ScheduleEvent {users} {eventTemplates} {roleTemplates} />
 
 <EventsTable events={data.events} roles={data.roles} enableNav />

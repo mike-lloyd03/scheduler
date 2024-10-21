@@ -21,7 +21,7 @@
 >
     <p>
         <span class="font-bold">Name:</span>
-        <InputField name="name" value={data.org.name} {edit} />
+        <InputField name="name" value={data.org.name} {edit} form="updateForm" />
     </p>
     <p><span class="font-bold">Created at:</span> {toLocaleDateTime(data.org.created)}</p>
     <p><span class="font-bold">Updated at:</span> {toLocaleDateTime(data.org.updated)}</p>

@@ -34,17 +34,18 @@
 
 <header class="flex-end card variant-filled-surface flex justify-end">
     {#if edit}
-        <ActionButton type="submit" formID="form" />
+        <ActionButton type="submit" formID="updateForm" />
         <ActionButton type="cancel" onClick={() => (edit = false)} />
     {:else}
         <ActionButton type="edit" onClick={() => (edit = true)} />
         <ActionButton type="delete" title="Delete {title}" body={deleteBody} formID="deleteForm" />
     {/if}
 </header>
+
+<form id="updateForm" method="POST" action={updateAction} use:enhance={submit} />
+
 <div>
-    <form id="form" method="POST" action={updateAction} use:enhance={submit}>
-        <div class="py-4">
-            <slot />
-        </div>
-    </form>
+    <div class="py-4">
+        <slot />
+    </div>
 </div>

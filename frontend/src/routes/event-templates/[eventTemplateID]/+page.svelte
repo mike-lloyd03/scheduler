@@ -7,6 +7,7 @@
     import ResourcePage from "$lib/components/ResourcePage.svelte";
     import { toLocaleDateTime } from "$lib/utils";
     import { breadcrumbs } from "$lib/stores";
+    import ScheduleEvent from "$lib/components/ScheduleEvent.svelte";
 
     export let data: PageData;
 
@@ -37,7 +38,12 @@
     <div class="py-4">
         <div>
             <span class="font-bold">Name:</span>
-            <InputField name="name" value={data.eventTemplate.name} edit={editEventTemplate} />
+            <InputField
+                name="name"
+                value={data.eventTemplate.name}
+                edit={editEventTemplate}
+                form="updateForm"
+            />
         </div>
 
         <div>
@@ -47,6 +53,7 @@
                 value={{ value: currentReccurrence, label: currentReccurrence }}
                 options={recurrenceOptions}
                 edit={editEventTemplate}
+                form="updateForm"
             />
         </div>
 
@@ -63,6 +70,13 @@
             {toLocaleDateTime(data.eventTemplate.updated)}
         </div>
     </div>
+
+    <ScheduleEvent
+        users={data.users}
+        eventTemplates={data.eventTemplates}
+        roleTemplates={data.roleTemplates}
+        selectedEventTemplateID={data.eventTemplate.id}
+    />
 
     <div class="py-8">
         <RoleTemplatesTable roleTemplates={data.roleTemplates} />

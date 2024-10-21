@@ -3,10 +3,11 @@
     export let value: { value: string | null; label: string };
     export let options: { value: string | null; label: string }[];
     export let edit: boolean;
+    export let form: string | null = null;
 </script>
 
 {#if edit}
-    <select class="select" id={name} {name} value={value.value}>
+    <select class="select" id={name} {name} value={value.value} {form}>
         {#each options as option}
             <option
                 value={option.value}

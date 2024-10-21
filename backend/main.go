@@ -46,7 +46,7 @@ func main() {
 		}
 
 		if org != "" && group != "" {
-			return fmt.Errorf("Either an organization or a group must be chosen, but not both")
+			return fmt.Errorf("Either an organization or a group must be provided, but not both")
 		}
 
 		return nil

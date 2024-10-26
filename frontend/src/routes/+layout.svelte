@@ -37,6 +37,10 @@
     });
 </script>
 
+<svelte:head>
+    <title>Scheduler</title>
+</svelte:head>
+
 {#if data.currentUser}
     <Drawer>
         <div class="flex flex-row">

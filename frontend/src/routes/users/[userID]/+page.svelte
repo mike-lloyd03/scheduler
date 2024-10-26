@@ -7,6 +7,7 @@
     import MultiSelectField from "$lib/fields/MultiSelectField.svelte";
     import type { Org, OptionType, Group } from "$lib/types";
     import UpdatePassword from "./UpdatePassword.svelte";
+    import PermissionsTable from "./PermissionsTable.svelte";
 
     export let data: PageData;
 
@@ -74,4 +75,10 @@
     <div>
         <UpdatePassword />
     </div>
+
+    {#if data.permissions.length}
+        <div>
+            <PermissionsTable permissions={data.permissions} />
+        </div>
+    {/if}
 </ResourcePage>

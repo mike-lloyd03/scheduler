@@ -97,3 +97,14 @@ export type User = {
 };
 
 export type OptionType = { value: string | null; label: string }[];
+
+export type Permission = {
+    id: string;
+    user: string;
+    org: string;
+    group: string;
+    role: UserRole;
+    created: string;
+    updated: string;
+    expand?: { user?: User; group?: Group; org?: Org };
+};

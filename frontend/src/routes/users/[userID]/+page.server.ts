@@ -1,6 +1,6 @@
 import { fail } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import type { Group, Org, User } from "$lib/types";
+import type { Group, Org, Permission, User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -18,8 +18,11 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 
     const orgs = await locals.pb.collection("orgs").getFullList<Org>({ sort: "name" });
     const groups = await locals.pb.collection("groups").getFullList<Group>({ sort: "name" });
+    const permissions = await locals.pb
+        .collection("permissions")
+        .getFullList<Permission>({ filter: `user='${user.id}'`, expand: "org,group" });
 
-    return { user, orgs, groups };
+    return { user, orgs, groups, permissions };
 };
 
 export const actions: Actions = {

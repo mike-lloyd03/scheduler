@@ -44,14 +44,14 @@
         <div class="py-4">
             <p>
                 <span class="font-bold">Password:</span>
-                <input class="input inline" type="password" name="password" />
+                <input class="input inline" type="password" name="password" required />
             </p>
         </div>
 
         <div class="py-4">
             <p>
                 <span class="font-bold">Re-enter Password:</span>
-                <input class="input inline" type="password" name="passwordConfirm" />
+                <input class="input inline" type="password" name="passwordConfirm" required />
             </p>
         </div>
 

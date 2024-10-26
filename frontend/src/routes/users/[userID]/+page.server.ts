@@ -1,4 +1,4 @@
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import type { Group, Org, Permission, User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
@@ -10,6 +10,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         user = await locals.pb
             .collection("users")
             .getFirstListItem<User>("", { sort: "-created", perPage: 1 });
+        throw redirect(307, `/users/${user.id}`);
     } else {
         user = await locals.pb
             .collection("users")

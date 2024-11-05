@@ -41,9 +41,11 @@
     <form id="roleForm" method="POST" use:enhance={submit}>
         <table class="table table-hover table-fixed text-center">
             <thead>
-                <th>Role</th>
-                <th>Description</th>
-                <th>Actions</th>
+                <tr>
+                    <th>Role</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
                 {#each roleTemplates as roleTemplate}
@@ -69,7 +71,7 @@
                                 name="description"
                                 id="description"
                                 placeholder="Description"
-                            />
+                            ></textarea>
                         </td>
                         <td>
                             <ActionButton type="submit" formaction="?/newRole" />

@@ -7,8 +7,10 @@
 <div class="table-container">
     <table class="table table-hover table-fixed text-center">
         <thead>
-            <td>Unit</td>
-            <td>Role</td>
+            <tr>
+                <th>Unit</th>
+                <th>Role</th>
+            </tr>
         </thead>
         <tbody>
             {#each permissions as p}

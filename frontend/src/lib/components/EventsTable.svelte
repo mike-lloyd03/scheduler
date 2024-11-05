@@ -44,12 +44,14 @@
             class="table {enableNav ? 'table-interactive' : 'table-hover'} table-fixed text-center"
         >
             <thead>
-                {#if !hideEventName}
-                    <th>Event</th>
-                {/if}
-                <th>Date</th>
-                <th>Assigned Roles</th>
-                <th>Actions</th>
+                <tr>
+                    {#if !hideEventName}
+                        <th>Event</th>
+                    {/if}
+                    <th>Date</th>
+                    <th>Assigned Roles</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
                 {#each eventRoles as er}

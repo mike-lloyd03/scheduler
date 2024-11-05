@@ -11,6 +11,8 @@
     export let deleteBody: string;
     export let updateAction = "?/update";
     export let deleteAction = "?/delete";
+    export let showEdit = false;
+    export let showDelete = false;
 
     const submit: SubmitFunction = ({ action }) => {
         let successMsg = "Success";
@@ -37,8 +39,17 @@
         <ActionButton type="submit" formID="updateForm" />
         <ActionButton type="cancel" onClick={() => (edit = false)} />
     {:else}
-        <ActionButton type="edit" onClick={() => (edit = true)} />
-        <ActionButton type="delete" title="Delete {title}" body={deleteBody} formID="deleteForm" />
+        {#if showEdit}
+            <ActionButton type="edit" onClick={() => (edit = true)} />
+        {/if}
+        {#if showDelete}
+            <ActionButton
+                type="delete"
+                title="Delete {title}"
+                body={deleteBody}
+                formID="deleteForm"
+            />
+        {/if}
     {/if}
 </header>
 

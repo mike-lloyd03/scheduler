@@ -5,7 +5,7 @@ export const load: LayoutServerLoad = ({ locals, url }) => {
     if (locals.currentUser) {
         return {
             currentUser: locals.currentUser,
-            currentUserRole: locals.currentUserRole ?? undefined,
+            currentUserPermissions: locals.currentUserPermissions ?? undefined,
         };
     } else if (url.pathname != "/login") {
         return redirect(307, "/login");

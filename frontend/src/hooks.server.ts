@@ -15,12 +15,12 @@ export const handle: Handle = async ({ event, resolve }) => {
             const permissions = await event.locals.pb
                 .collection("permissions")
                 .getFullList<Permission>({ filter: `user="${event.locals.currentUser.id}"` });
-            event.locals.currentUserRole = getRole(permissions);
+            event.locals.currentUserPermissions = permissions;
         }
     } catch (_) {
         event.locals.pb.authStore.clear();
         event.locals.currentUser = undefined;
-        event.locals.currentUserRole = undefined;
+        event.locals.currentUserPermissions = undefined;
     }
 
     const response = await resolve(event);

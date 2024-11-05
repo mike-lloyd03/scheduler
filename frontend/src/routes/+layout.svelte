@@ -50,7 +50,11 @@
             <h2 class="p-4">Navigation</h2>
         </div>
         <hr />
-        <Navigation {drawerClose} user={data.currentUser} role={data.currentUserRole} />
+        <Navigation
+            {drawerClose}
+            user={data.currentUser}
+            permissions={data.currentUserPermissions}
+        />
     </Drawer>
 {/if}
 
@@ -73,7 +77,7 @@
 
     <svelte:fragment slot="sidebarLeft">
         {#if data.currentUser}
-            <Navigation user={data.currentUser} role={data.currentUserRole} />
+            <Navigation user={data.currentUser} permissions={data.currentUserPermissions} />
         {/if}
     </svelte:fragment>
 

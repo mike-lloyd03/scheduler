@@ -19,7 +19,7 @@ declare global {
         interface Locals {
             pb: PocketBase;
             currentUser?: User;
-            currentUserRole?: CurrentUserRole;
+            currentUserPermissions?: Permission[];
         }
         interface PageData {
             currentUser?: User;

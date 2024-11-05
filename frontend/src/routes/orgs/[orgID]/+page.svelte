@@ -4,6 +4,7 @@
     import ResourcePage from "$lib/components/ResourcePage.svelte";
     import { toLocaleDateTime } from "$lib/utils";
     import { breadcrumbs } from "$lib/stores";
+    import { UserRole } from "$lib/types";
 
     export let data: PageData;
 
@@ -18,6 +19,9 @@
     baseURL="/orgs"
     deleteBody="Are you sure you want to delete the organization '{data.org
         .name}'? This will delete all groups, events, and other resources associated with it."
+    showEdit={data.currentUserPermissions
+        ?.filter((p) => p.org == data.org.id)
+        .some((p) => p.role == UserRole.Admin)}
 >
     <p>
         <span class="font-bold">Name:</span>

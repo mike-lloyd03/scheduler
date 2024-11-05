@@ -13,16 +13,17 @@
     let items = $derived(data.groups.map((group) => {
         return { id: group.id, name: group.name };
     }))
+
+    let showActions = $derived(data.currentUserPermissions && [CurrentUserRole.OrgAdmin, CurrentUserRole.OrgManager].includes(getRole(data.currentUserPermissions)))
 </script>
 
-<NavLayout title="Groups" {items} urlPath={$page.url.pathname}>
-    {#if data.currentUserPermissions && getRole(data.currentUserPermissions) in [CurrentUserRole.OrgAdmin, CurrentUserRole.OrgManager]}
-    {#snippet actions()}
-            <div class="flex">
-                <ActionButton type="new" onClick={() => goto("/groups/new")} />
-            </div>
+{#snippet actions()}
+    <div class="flex">
+    <ActionButton type="new" onClick={() => goto("/groups/new")} />
+    </div>
     {/snippet}
-{/if}
+
+<NavLayout title="Groups" {items} urlPath={$page.url.pathname} actions={showActions ? actions : undefined}>
         
     {@render children?.()}
 </NavLayout>

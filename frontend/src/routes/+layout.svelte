@@ -5,7 +5,7 @@
     import "../app.css";
     import Navigation from "./Navigation.svelte";
     import Breadcrumbs from "./Breadcrumbs.svelte";
-    import type { PageData } from "./$types";
+    import type { LayoutData } from "./$types";
     import Hamburger from "$lib/svg/Hamburger.svelte";
     import { navigating, page } from "$app/stores";
     import { goto } from "$app/navigation";
@@ -16,7 +16,7 @@
         breadcrumbs.clear();
     }
 
-    export let data: PageData;
+    export let data: LayoutData;
 
     initializeStores();
 
@@ -50,7 +50,7 @@
             <h2 class="p-4">Navigation</h2>
         </div>
         <hr />
-        <Navigation {drawerClose} user={data.currentUser} />
+        <Navigation {drawerClose} user={data.currentUser} role={data.currentUserRole} />
     </Drawer>
 {/if}
 
@@ -73,7 +73,7 @@
 
     <svelte:fragment slot="sidebarLeft">
         {#if data.currentUser}
-            <Navigation user={data.currentUser} />
+            <Navigation user={data.currentUser} role={data.currentUserRole} />
         {/if}
     </svelte:fragment>
 

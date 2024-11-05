@@ -6,6 +6,14 @@ export enum UserRole {
     User = "user",
 }
 
+export enum CurrentUserRole {
+    Member = "member",
+    GroupManager = "group_manager",
+    GroupAdmin = "group_admin",
+    OrgManager = "org_manager",
+    OrgAdmin = "org_admin",
+}
+
 export enum Recurrence {
     Daily = "daily",
     Weekly = "weekly",

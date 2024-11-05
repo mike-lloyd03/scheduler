@@ -2,6 +2,7 @@ import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
 import { type ModalComponent, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
 import { DateTime } from "luxon";
+import { CurrentUserRole, type Permission } from "./types";
 
 export function handleSubmit(successMsg: string, onSuccess: (() => void) | undefined = undefined) {
     return async ({ result, update }) => {
@@ -75,4 +76,34 @@ export function toLocaleDateTime(dateString: string): string {
 export function toLocaleDate(dateString: string): string {
     const date = DateTime.fromSQL(dateString);
     return date.toLocaleString(DateTime.DATE_SHORT);
+}
+
+export function getRole(permissions: Permission[]): CurrentUserRole {
+    const roleNames = [
+        CurrentUserRole.Member,
+        CurrentUserRole.GroupManager,
+        CurrentUserRole.GroupAdmin,
+        CurrentUserRole.OrgManager,
+        CurrentUserRole.OrgAdmin,
+    ];
+    let roleValue = 0;
+
+    for (const p of permissions) {
+        if (p.org != "") {
+            if (p.role == "admin") {
+                roleValue = 4;
+                break;
+            } else if (p.role == "manager" && roleValue < 4) {
+                roleValue = 3;
+            }
+        } else if (p.group != "") {
+            if (p.role == "admin" && roleValue < 3) {
+                roleValue = 2;
+            } else if (p.role == "manager" && roleValue < 2) {
+                roleValue = 1;
+            }
+        }
+    }
+
+    return roleNames[roleValue];
 }

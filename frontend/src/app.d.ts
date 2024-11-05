@@ -4,6 +4,7 @@ import type {
     EventTemplate,
     RoleTemplate,
     User,
+    CurrentUserRole,
     Event,
     Role,
     Permission,
@@ -17,10 +18,11 @@ declare global {
         // interface Error {}
         interface Locals {
             pb: PocketBase;
-            currentUser: User | undefined;
+            currentUser?: User;
+            currentUserRole?: CurrentUserRole;
         }
         interface PageData {
-            currentUser: User | undefined;
+            currentUser?: User;
             orgs?: Org[];
             org?: Org;
             groups?: Group[];

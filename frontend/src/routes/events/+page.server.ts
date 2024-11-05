@@ -1,4 +1,4 @@
-import type { Role, Event, EventTemplate, RoleTemplate } from "$lib/types";
+import type { Role, Event, EventTemplate, RoleTemplate, User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 import type { Actions, PageServerLoad } from "./$types";
 import { fail } from "@sveltejs/kit";
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
     const roles = await locals.pb.collection("roles").getFullList<Role>({});
 
-    const users = await locals.pb.collection("users").getFullList<Role>({ expand: "orgs,groups" });
+    const users = await locals.pb.collection("users").getFullList<User>({ expand: "orgs,groups" });
 
     return { eventTemplates, roleTemplates, events, roles, users };
 };

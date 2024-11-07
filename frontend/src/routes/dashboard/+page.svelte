@@ -13,9 +13,11 @@
 <div class="table-container">
     <table class="table table-interactive table-fixed text-center">
         <thead>
-            <th>Event</th>
-            <th>Date</th>
-            <th>Assigned Role</th>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Assigned Role</th>
+            </tr>
         </thead>
         <tbody>
             {#each data.roles as role}

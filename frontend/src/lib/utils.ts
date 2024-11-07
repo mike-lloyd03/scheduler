@@ -2,7 +2,7 @@ import { invalidateAll } from "$app/navigation";
 import toast from "svelte-french-toast";
 import { type ModalComponent, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
 import { DateTime } from "luxon";
-import { CurrentUserRole, type Permission } from "./types";
+import { CurrentUserRole, UserRole, type Group, type Org, type Permission } from "./types";
 
 export function handleSubmit(successMsg: string, onSuccess: (() => void) | undefined = undefined) {
     return async ({ result, update }) => {
@@ -106,4 +106,12 @@ export function getRole(permissions: Permission[]): CurrentUserRole {
     }
 
     return roleNames[roleValue];
+}
+
+export function hasOrgRole(permissions: Permission[], org: Org, role: UserRole): boolean {
+    return permissions.some((p) => p.org == org.id && p.role == role);
+}
+
+export function hasGroupRole(permissions: Permission[], group: Group, role: UserRole): boolean {
+    return permissions.some((p) => p.group == group.id && p.role == role);
 }

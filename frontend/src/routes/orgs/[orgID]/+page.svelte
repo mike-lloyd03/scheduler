@@ -6,18 +6,21 @@
     import { breadcrumbs } from "$lib/stores";
     import { UserRole } from "$lib/types";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
     const permissions = data.currentUserPermissions ?? [];
 
-    $: breadcrumbs.clear().add("Orgs", "orgs").add(data.org.name, data.org.id);
+    $effect(() => {
+        breadcrumbs.clear().add("Orgs", "orgs").add(data.org.name, data.org.id);
+    });
 
-    let edit = false;
-    $: showEdit = hasOrgRole(permissions, data.org, UserRole.Admin);
+    let edit = $state(false);
+    const showEdit = $derived(hasOrgRole(permissions, data.org, UserRole.Admin));
 </script>
 
 <ResourcePage
     bind:edit
     resourceName="Organization"
+    title={data.org.name}
     baseURL="/orgs"
     deleteBody="Are you sure you want to delete the organization '{data.org
         .name}'? This will delete all groups, events, and other resources associated with it."

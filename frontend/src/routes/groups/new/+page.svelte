@@ -6,7 +6,7 @@
     import { goto } from "$app/navigation";
     import type { PageData } from "./$types";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
     const submit: SubmitFunction = () => {
         return handleSubmit("Group created", () => goto("/groups/last"));

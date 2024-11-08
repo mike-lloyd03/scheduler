@@ -4,9 +4,11 @@
     import type { PageData } from "./$types";
     import { breadcrumbs } from "$lib/stores";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
-    breadcrumbs.clear().add("Groups", "groups");
+    $effect(() => {
+        breadcrumbs.clear().add("Groups", "groups");
+    });
 
     onMount(() => {
         const first = data.groups[0];

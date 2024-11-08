@@ -7,10 +7,10 @@
     import { UserRole } from "$lib/types";
     import { hasOrgRole } from "$lib/utils";
 
-    $: breadcrumbs.clear().add("Groups", "groups").add(data.group.name, data.group.id);
-
     export let data: PageData;
-    const permissions = data.currentUserPermissions;
+    const permissions = data.currentUserPermissions ?? [];
+
+    $: breadcrumbs.clear().add("Groups", "groups").add(data.group.name, data.group.id);
 
     let edit = false;
     $: showDelete = hasOrgRole(permissions ?? [], data.group.expand!.org, UserRole.Admin);
@@ -19,7 +19,7 @@
 
 <ResourcePage
     bind:edit
-    title="Group"
+    resourceName="Group"
     baseURL="/groups"
     deleteBody="Are you sure you want to delete the group '{data.group
         .name}'? This will delete all events and other resources associated with it."

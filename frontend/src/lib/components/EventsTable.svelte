@@ -11,6 +11,7 @@
     export let roles: Role[];
     export let hideEventName = false;
     export let enableNav = false;
+    export let showDelete = false;
 
     let deleteEventID: string | null;
 
@@ -50,7 +51,9 @@
                     {/if}
                     <th>Date</th>
                     <th>Assigned Roles</th>
-                    <th>Actions</th>
+                    {#if showDelete}
+                        <th>Actions</th>
+                    {/if}
                 </tr>
             </thead>
             <tbody>
@@ -70,15 +73,17 @@
                             >{er.roles.filter((r) => r.assigned_to != "").length}/{er.roles
                                 .length}</td
                         >
-                        <th>
-                            <ActionButton
-                                type="delete"
-                                title="Delete Event"
-                                body={`Are you sure you want to delete this scheduled '${er.event.expand?.event_template.name}' event?'`}
-                                formID="deleteEventForm"
-                                onClick={() => (deleteEventID = er.event.id)}
-                            />
-                        </th>
+                        {#if showDelete}
+                            <td>
+                                <ActionButton
+                                    type="delete"
+                                    title="Delete Event"
+                                    body={`Are you sure you want to delete this scheduled '${er.event.expand?.event_template.name}' event?'`}
+                                    formID="deleteEventForm"
+                                    onClick={() => (deleteEventID = er.event.id)}
+                                />
+                            </td>
+                        {/if}
                     </tr>
                 {/each}
             </tbody>

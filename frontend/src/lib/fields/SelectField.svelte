@@ -7,7 +7,7 @@
 </script>
 
 {#if edit}
-    <select class="select" id={name} {name} value={value.value} {form}>
+    <select class="select w-fit" id={name} {name} value={value.value} {form}>
         {#each options as option}
             <option
                 value={option.value}

@@ -6,7 +6,7 @@
 </script>
 
 {#if edit}
-    <textarea class="textarea" id={name} {name} {value} {form} />
+    <textarea class="textarea w-fit" id={name} {name} {value} {form}></textarea>
 {:else}
     {value}
 {/if}

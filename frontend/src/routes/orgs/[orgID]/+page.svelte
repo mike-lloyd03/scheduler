@@ -17,7 +17,7 @@
 
 <ResourcePage
     bind:edit
-    title="Organization"
+    resourceName="Organization"
     baseURL="/orgs"
     deleteBody="Are you sure you want to delete the organization '{data.org
         .name}'? This will delete all groups, events, and other resources associated with it."

@@ -55,10 +55,12 @@
 <div>
     <table class="table table-hover text-center">
         <thead>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Assigned to</th>
-            <th>Actions</th>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Assigned to</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
             {#each data.roles as role}

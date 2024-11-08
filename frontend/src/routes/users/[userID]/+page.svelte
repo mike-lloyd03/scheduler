@@ -30,7 +30,7 @@
 
 <ResourcePage
     bind:edit
-    title="User"
+    resourceName="User"
     baseURL="/users"
     deleteBody="Are you sure you want to delete the user '{data.user.name}'?"
 >

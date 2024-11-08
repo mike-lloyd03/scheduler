@@ -6,11 +6,18 @@
     import { handleSubmit } from "$lib/utils";
     import ActionButton from "$lib/components/ActionButton.svelte";
 
-    export let roleTemplates: RoleTemplate[];
+    interface Props {
+        roleTemplates: RoleTemplate[];
+        showNew: boolean;
+        showEdit: boolean;
+        showDelete: boolean;
+    }
 
-    let editRoleTemplate: string | null;
-    let deleteRoleTemplate: string | null;
-    let newRole: boolean;
+    let { roleTemplates, showNew = false, showEdit = false, showDelete = false }: Props = $props();
+
+    let editRoleTemplate: string | undefined = $state();
+    let deleteRoleTemplate: string | undefined = $state();
+    let newRole = $state(false);
 
     const submit: SubmitFunction = ({ action, formData }) => {
         let successMsg = "Successful";
@@ -23,12 +30,12 @@
             case "?/updateRole":
                 successMsg = "Role updated";
                 formData.set("roleID", editRoleTemplate || "");
-                editRoleTemplate = null;
+                editRoleTemplate = undefined;
                 break;
             case "?/deleteRole":
                 successMsg = "Role deleted";
                 formData.set("roleID", deleteRoleTemplate || "");
-                deleteRoleTemplate = null;
+                deleteRoleTemplate = undefined;
                 break;
         }
 
@@ -44,47 +51,59 @@
                 <tr>
                     <th>Role</th>
                     <th>Description</th>
-                    <th>Actions</th>
+                    {#if showNew || showEdit || showDelete}
+                        <th>Actions</th>
+                    {/if}
                 </tr>
             </thead>
             <tbody>
                 {#each roleTemplates as roleTemplate}
-                    <RoleRow {roleTemplate} bind:editRoleTemplate bind:deleteRoleTemplate />
+                    <RoleRow
+                        {roleTemplate}
+                        bind:editRoleTemplate
+                        bind:deleteRoleTemplate
+                        {showEdit}
+                        {showDelete}
+                    />
                 {/each}
-                <tr>
-                    {#if newRole}
-                        <td>
-                            <!-- svelte-ignore a11y-autofocus -->
-                            <input
-                                class="input"
-                                type="text"
-                                name="name"
-                                id="name"
-                                placeholder="Role Name"
-                                required
-                                autofocus
-                            />
-                        </td>
-                        <td>
-                            <textarea
-                                class="textarea"
-                                name="description"
-                                id="description"
-                                placeholder="Description"
-                            ></textarea>
-                        </td>
-                        <td>
-                            <ActionButton type="submit" formaction="?/newRole" />
-                            <ActionButton type="cancel" onClick={() => (newRole = false)} />
-                        </td>
-                    {:else}
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <ActionButton type="new" onClick={() => (newRole = true)} />
-                        </td>
-                    {/if}
-                </tr>
+                {#if showNew}
+                    <tr>
+                        {#if newRole}
+                            <td>
+                                <!-- svelte-ignore a11y_autofocus -->
+                                <input
+                                    class="input"
+                                    type="text"
+                                    name="name"
+                                    id="name"
+                                    placeholder="Role Name"
+                                    required
+                                    autofocus
+                                />
+                            </td>
+                            <td>
+                                <textarea
+                                    class="textarea"
+                                    name="description"
+                                    id="description"
+                                    placeholder="Description"
+                                ></textarea>
+                            </td>
+                            {#if showNew}
+                                <td>
+                                    <ActionButton type="submit" formaction="?/newRole" />
+                                    <ActionButton type="cancel" onClick={() => (newRole = false)} />
+                                </td>
+                            {/if}
+                        {:else}
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <ActionButton type="new" onClick={() => (newRole = true)} />
+                            </td>
+                        {/if}
+                    </tr>
+                {/if}
             </tbody>
         </table>
     </form>

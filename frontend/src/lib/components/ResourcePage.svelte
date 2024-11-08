@@ -6,6 +6,7 @@
     import { goto } from "$app/navigation";
 
     export let edit = false;
+    export let resourceName: string;
     export let title: string;
     export let baseURL: string;
     export let deleteBody: string;
@@ -20,11 +21,11 @@
 
         switch (action.search) {
             case updateAction:
-                successMsg = `${title} updated`;
+                successMsg = `${resourceName} updated`;
                 edit = false;
                 break;
             case deleteAction:
-                successMsg = `${title} deleted`;
+                successMsg = `${resourceName} deleted`;
                 onSuccess = () => goto(baseURL);
                 break;
         }
@@ -34,26 +35,32 @@
 
 <form method="POST" action={deleteAction} use:enhance={submit} id="deleteForm"></form>
 
-<header class="flex-end card variant-filled-surface flex justify-end">
-    {#if edit}
-        <ActionButton type="submit" formID="updateForm" />
-        <ActionButton type="cancel" onClick={() => (edit = false)} />
-    {:else}
-        {#if showEdit}
-            <ActionButton type="edit" onClick={() => (edit = true)} />
+<header class="card variant-filled-surface flex h-11 items-center">
+    <h3 class="h3 ml-4 grow">
+        {title}
+    </h3>
+
+    <div>
+        {#if edit}
+            <ActionButton type="submit" formID="updateForm" />
+            <ActionButton type="cancel" onClick={() => (edit = false)} />
+        {:else}
+            {#if showEdit}
+                <ActionButton type="edit" onClick={() => (edit = true)} />
+            {/if}
+            {#if showDelete}
+                <ActionButton
+                    type="delete"
+                    title="Delete {resourceName}"
+                    body={deleteBody}
+                    formID="deleteForm"
+                />
+            {/if}
         {/if}
-        {#if showDelete}
-            <ActionButton
-                type="delete"
-                title="Delete {title}"
-                body={deleteBody}
-                formID="deleteForm"
-            />
-        {/if}
-    {/if}
+    </div>
 </header>
 
-<form id="updateForm" method="POST" action={updateAction} use:enhance={submit} />
+<form id="updateForm" method="POST" action={updateAction} use:enhance={submit}></form>
 
 <div>
     <div class="py-4">

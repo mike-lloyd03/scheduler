@@ -6,7 +6,7 @@
 </script>
 
 {#if edit}
-    <input class="input inline" type="text" id={name} {name} {value} {form} />
+    <input class="input w-fit" type="text" id={name} {name} {value} {form} />
 {:else}
     {value}
 {/if}

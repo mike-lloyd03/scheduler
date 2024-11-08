@@ -4,11 +4,23 @@
     import type { RoleTemplate } from "$lib/types";
     import ActionButton from "$lib/components/ActionButton.svelte";
 
-    export let roleTemplate: RoleTemplate;
-    export let editRoleTemplate: string | null;
-    export let deleteRoleTemplate: string | null;
+    interface Props {
+        roleTemplate: RoleTemplate;
+        editRoleTemplate: string | undefined;
+        deleteRoleTemplate: string | undefined;
+        showEdit: boolean;
+        showDelete: boolean;
+    }
 
-    $: edit = roleTemplate.id == editRoleTemplate;
+    let {
+        roleTemplate,
+        editRoleTemplate = $bindable(),
+        deleteRoleTemplate = $bindable(),
+        showEdit = false,
+        showDelete = false,
+    }: Props = $props();
+
+    let edit = $derived(roleTemplate.id == editRoleTemplate);
 </script>
 
 <tr>
@@ -18,20 +30,30 @@
     <td>
         <TextAreaField name="description" value={roleTemplate.description || ""} {edit} />
     </td>
-    <td>
-        {#if edit}
-            <ActionButton type="submit" formaction="?/updateRole" />
-            <ActionButton type="cancel" onClick={() => (editRoleTemplate = null)} />
-        {:else}
-            <ActionButton type="edit" onClick={() => (editRoleTemplate = roleTemplate.id)} />
-            <ActionButton
-                type="delete"
-                title="Delete Role Template"
-                body={`Are you sure you want to delete role template '${roleTemplate.name}'?`}
-                formID="roleForm"
-                onClick={() => (deleteRoleTemplate = roleTemplate.id)}
-                formaction="?/deleteRole"
-            />
-        {/if}
-    </td>
+    {#if showEdit || showDelete}
+        <td>
+            {#if edit}
+                <ActionButton type="submit" formaction="?/updateRole" />
+                <ActionButton type="cancel" onClick={() => (editRoleTemplate = undefined)} />
+            {:else}
+                {#if showEdit}
+                    <ActionButton
+                        type="edit"
+                        onClick={() => (editRoleTemplate = roleTemplate.id)}
+                    />
+                {/if}
+
+                {#if showDelete}
+                    <ActionButton
+                        type="delete"
+                        title="Delete Role Template"
+                        body={`Are you sure you want to delete role template '${roleTemplate.name}'?`}
+                        formID="roleForm"
+                        onClick={() => (deleteRoleTemplate = roleTemplate.id)}
+                        formaction="?/deleteRole"
+                    />
+                {/if}
+            {/if}
+        </td>
+    {/if}
 </tr>

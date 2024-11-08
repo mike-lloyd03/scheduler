@@ -1,6 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import type { RoleTemplate, EventTemplate, Role, Event } from "$lib/types";
+import type { RoleTemplate, EventTemplate, Role, Event, User } from "$lib/types";
 import type { ClientResponseError } from "pocketbase";
 
 export const load: PageServerLoad = async ({ locals, params }) => {
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
     } else {
         eventTemplate = await locals.pb
             .collection("event_templates")
-            .getOne<EventTemplate>(params.eventTemplateID, { expand: "group" });
+            .getOne<EventTemplate>(params.eventTemplateID, { expand: "group.org" });
     }
 
     const roleTemplates = await locals.pb.collection("role_templates").getFullList<RoleTemplate>({
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         filter: `(role_template.event_template.id='${params.eventTemplateID}')`,
     });
 
-    const users = await locals.pb.collection("users").getFullList<Role>({ expand: "orgs,groups" });
+    const users = await locals.pb.collection("users").getFullList<User>({ expand: "orgs,groups" });
 
     return { eventTemplate, roleTemplates, events, roles, users };
 };

@@ -13,7 +13,7 @@
 </script>
 
 {#if edit}
-    <select class="select" id={name} {name} value={value.map((v) => v.value)} multiple {form}>
+    <select class="select w-fit" id={name} {name} value={value.map((v) => v.value)} multiple {form}>
         {#each options as option}
             <option value={option.value} selected={isSelected(option)}>{option.label}</option>
         {/each}

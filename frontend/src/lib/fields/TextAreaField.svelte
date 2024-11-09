@@ -2,7 +2,7 @@
     export let name: string;
     export let value: string | undefined;
     export let edit: boolean;
-    export let form: string | null = null;
+    export let form: string | undefined = undefined;
 </script>
 
 {#if edit}

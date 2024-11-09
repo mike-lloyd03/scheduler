@@ -9,21 +9,20 @@
     import { toLocaleDateTime } from "$lib/utils";
     import { breadcrumbs } from "$lib/stores";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
     breadcrumbs
         .clear()
         .add("Events", "events")
         .add(data.event.expand?.event_template.name, data.event.id);
 
-    let editRole: string | undefined = undefined;
-    let newRole: boolean;
+    let editRole: string | undefined = $state(undefined);
+    let newRole: boolean = $state(false);
 
-    let userOptions: { value: string | null; label: string }[];
-    userOptions = data.users.map((u: User) => {
-        return { value: u.id, label: u.name };
+    let userOptions: { value: string | undefined; label: string }[] = data.users.map((u: User) => {
+        return { value: u.id, label: u.name ?? "" };
     });
-    userOptions.unshift({ value: null, label: "(Unassigned)" });
+    userOptions.unshift({ value: undefined, label: "(Unassigned)" });
 
     const submit: SubmitFunction = ({ action, formData }) => {
         let successMsg = "Success";
@@ -82,7 +81,7 @@
                             <SelectField
                                 name="assigned_to"
                                 value={{
-                                    value: role.assigned_to || null,
+                                    value: role.assigned_to || undefined,
                                     label: role.expand?.assigned_to?.name ?? "Unassigned",
                                 }}
                                 options={userOptions}

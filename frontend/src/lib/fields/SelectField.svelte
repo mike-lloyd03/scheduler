@@ -1,9 +1,9 @@
 <script lang="ts">
     export let name: string;
-    export let value: { value: string | null; label: string };
-    export let options: { value: string | null; label: string }[];
+    export let value: { value: string | undefined; label: string };
+    export let options: { value: string | undefined; label: string }[];
     export let edit: boolean;
-    export let form: string | null = null;
+    export let form: string | undefined = undefined;
 </script>
 
 {#if edit}

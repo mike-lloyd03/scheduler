@@ -23,7 +23,7 @@
     const currentReccurrence = data.eventTemplate.recurrence;
     let editEventTemplate = $state(false);
 
-    const recurrenceOptions: { value: string | null; label: string }[] = [
+    const recurrenceOptions: { value: string | undefined; label: string }[] = [
         { value: "daily", label: "Daily" },
         { value: "weekly", label: "Weekly" },
         { value: "monthly", label: "Monthly" },

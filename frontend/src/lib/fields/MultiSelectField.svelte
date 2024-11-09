@@ -5,7 +5,7 @@
     export let value: OptionType[];
     export let options: OptionType[];
     export let edit: boolean;
-    export let form: string | null = null;
+    export let form: string | undefined = undefined;
 
     function isSelected(option: OptionType) {
         return value.some((v) => v.label === option.label || v.value === option.value);

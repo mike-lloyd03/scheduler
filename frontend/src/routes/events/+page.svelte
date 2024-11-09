@@ -4,9 +4,11 @@
     import { breadcrumbs } from "$lib/stores";
     import ScheduleEvent from "$lib/components/ScheduleEvent.svelte";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
-    breadcrumbs.clear().add("Events", "events");
+    $effect(() => {
+        breadcrumbs.clear().add("Events", "events");
+    });
 
     const eventTemplates = data.eventTemplates;
     const roleTemplates = data.roleTemplates;

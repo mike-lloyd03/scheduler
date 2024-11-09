@@ -330,12 +330,13 @@ func TestUsersGroupMember(t *testing.T) {
 			TestAppFactory: generateTestApp,
 		},
 		{
-			Name:            "group members cannot view users in own org",
+			Name:            "group members can view users in own org",
 			Method:          http.MethodGet,
 			Url:             fmt.Sprintf("/api/collections/users/records/%s", testData.org1group2Member.Id),
 			RequestHeaders:  auth,
-			ExpectedStatus:  404,
-			ExpectedContent: []string{`"data":{}`},
+			ExpectedStatus:  200,
+			ExpectedContent: []string{`"username":"org1group2Member"`},
+			ExpectedEvents:  map[string]int{OnRecordViewRequest: 1},
 			TestAppFactory:  generateTestApp,
 		},
 		{

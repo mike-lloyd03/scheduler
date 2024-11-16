@@ -15,12 +15,8 @@
     });
 
     let edit = $state(false);
-    let showDelete = $derived(
-        hasOrgRole(permissions ?? [], data.group.expand!.org, UserRole.Admin),
-    );
-    let showEdit = $derived(
-        showDelete || hasGroupRole(permissions ?? [], data.group, UserRole.Admin),
-    );
+    let showDelete = $derived(hasOrgRole(permissions, data.group.expand!.org, UserRole.Admin));
+    let showEdit = $derived(showDelete || hasGroupRole(permissions, data.group, UserRole.Admin));
 </script>
 
 <ResourcePage

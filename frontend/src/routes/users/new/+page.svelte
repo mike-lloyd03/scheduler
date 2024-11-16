@@ -6,7 +6,7 @@
     import type { SubmitFunction } from "@sveltejs/kit";
     import type { PageData } from "./$types";
 
-    export let data: PageData;
+    let { data }: { data: PageData } = $props();
 
     const submit: SubmitFunction = () => {
         return handleSubmit("User created", () => goto("/users/last"));

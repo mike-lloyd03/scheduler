@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
         .collection("permissions")
         .getFullList<Permission>({ filter: `user='${user.id}'`, expand: "org,group" });
 
-    return { user, orgs, groups, permissions };
+    return { user, orgs, groups, permissions, currentUser: locals.currentUser };
 };
 
 export const actions: Actions = {

@@ -104,7 +104,7 @@ export type User = {
     expand?: { orgs?: Org[]; groups?: Group[] };
 };
 
-export type OptionType = { value: string | null; label: string }[];
+export type OptionTypes = { value: string | undefined; label: string }[];
 
 export type Permission = {
     id: string;

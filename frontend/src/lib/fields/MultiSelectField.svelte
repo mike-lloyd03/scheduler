@@ -1,19 +1,22 @@
 <script lang="ts">
-    import type { OptionType } from "$lib/types";
+    import type { OptionTypes } from "$lib/types";
 
     export let name: string;
-    export let value: OptionType[];
-    export let options: OptionType[];
+    export let value: OptionTypes;
+    export let options: OptionTypes;
     export let edit: boolean;
     export let form: string | undefined = undefined;
 
-    function isSelected(option: OptionType) {
-        return value.some((v) => v.label === option.label || v.value === option.value);
+    function isSelected(option: OptionTypes) {
+        return value.some(
+            (v: { value: string | undefined; label: string }) =>
+                v.label === option.label || v.value === option.value,
+        );
     }
 </script>
 
 {#if edit}
-    <select class="select w-fit" id={name} {name} value={value.map((v) => v.value)} multiple {form}>
+    <select class="select w-fit" id={name} {name} value={value.map((v: { value: string | undefined; label: string }) => v.value)} multiple {form}>
         {#each options as option}
             <option value={option.value} selected={isSelected(option)}>{option.label}</option>
         {/each}

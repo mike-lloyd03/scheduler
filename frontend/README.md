@@ -23,3 +23,7 @@ App for scheduling people for things.
     -   Created and Deleted by Org and Group Admins
     -   Created, Deleted, and Updated by Org Admins of the owning org and Group Admins of the owning group
     -   List and View by Org Admins of the owning org and Group Admins of the owning group and all members in the group
+
+## Todo
+
+User with org admin over `FBC` group and group admin over `Ushers` can list and view user in `bob` org.

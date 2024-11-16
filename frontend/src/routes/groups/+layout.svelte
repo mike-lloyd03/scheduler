@@ -21,7 +21,7 @@
     <div class="flex">
     <ActionButton type="new" onClick={() => goto("/groups/new")} />
     </div>
-    {/snippet}
+{/snippet}
 
 <NavLayout title="Groups" {items} urlPath={$page.url.pathname} actions={showActions ? actions : undefined}>
         

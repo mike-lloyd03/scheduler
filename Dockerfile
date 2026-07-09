@@ -19,13 +19,13 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-COPY frontend/pnpm-lock.yaml frontend/package.json ./
+COPY frontend/pnpm-lock.yaml frontend/package.json frontend/pnpm-workspace.yaml ./
 
 RUN pnpm install
 
 COPY frontend/ ./
 
-RUN pnpm run build
+RUN CI=true pnpm run build
 
 ##### Final #####
 FROM node:22-alpine
